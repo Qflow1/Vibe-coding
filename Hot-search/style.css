@@ -1,0 +1,215 @@
+/* ============================================================
+   今日热搜网站 · 样式文件（style.css）
+   ------------------------------------------------------------
+   它只管一件事：东西长什么样。
+   配色思路：深色标题区 + 浅色内容区，干净、信息密度高。
+   ============================================================ */
+
+/* ---------- 全局 ---------- */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0 0 40px;
+  font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", sans-serif;
+  background: #f1f5f9;
+  color: #1e293b;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 把整页内容限制在中间一列，太宽了不好读 */
+.site-header,
+.filter-area,
+.list-area,
+.site-footer {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- ① 顶部区 ---------- */
+.site-header {
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  color: #fff;
+  padding: 36px 28px 30px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 4px 16px rgba(30, 64, 175, .18);
+}
+
+.site-title {
+  margin: 0 0 6px;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.site-desc {
+  margin: 0;
+  font-size: 15px;
+  opacity: .92;
+}
+
+/* 示例数据声明：不能省 —— PRD §4.4 规定不许宣称"全网热度" */
+.site-note {
+  margin: 14px 0 0;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, .16);
+  border-radius: 8px;
+  font-size: 13px;
+  display: inline-block;
+}
+.site-note b { color: #fde68a; }
+
+/* ---------- ② 筛选区 ---------- */
+.filter-area { padding: 0 20px; margin-bottom: 18px; }
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 16px;
+  pointer-events: none;   /* 装饰用，别挡住点击 */
+  opacity: .55;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 18px 14px 44px;
+  font-size: 15.5px;
+  font-family: inherit;
+  color: #1e293b;
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  outline: none;
+  transition: border-color .18s, box-shadow .18s;
+}
+
+.search-input::placeholder { color: #94a3b8; }
+
+.search-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, .12);
+}
+
+.filter-hint {
+  margin: 8px 2px 0;
+  font-size: 13px;
+  color: #64748b;
+  min-height: 20px;
+}
+
+/* ---------- ③ 列表区 ---------- */
+.list-area { padding: 0 20px; }
+
+.hot-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, .07);
+}
+
+.hot-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 15px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  cursor: pointer;               /* 鼠标变小手，暗示可点 */
+  transition: background .15s;
+}
+
+.hot-item:last-child { border-bottom: none; }
+.hot-item:hover { background: #f8fafc; }
+
+/* 排名数字 */
+.item-rank {
+  flex: 0 0 30px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;   /* 数字等宽，对齐好看 */
+}
+
+/* 前三名加颜色 */
+.item-rank.top-1 { color: #dc2626; }
+.item-rank.top-2 { color: #ea580c; }
+.item-rank.top-3 { color: #ca8a04; }
+
+.item-main { flex: 1; min-width: 0; }   /* min-width:0 让长标题能正常省略 */
+
+.item-title {
+  margin: 0 0 3px;
+  font-size: 15.5px;
+  font-weight: 500;
+  color: #1e293b;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;      /* 标题太长就省略号，不换行（保证一行一条好扫） */
+}
+
+.item-meta {
+  margin: 0;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.item-arrow {
+  flex: 0 0 auto;
+  font-size: 22px;
+  color: #cbd5e1;
+  transition: color .15s, transform .15s;
+}
+
+.hot-item:hover .item-arrow {
+  color: #3b82f6;
+  transform: translateX(3px);
+}
+
+/* ---------- ④ 空状态 ---------- */
+.empty-state {
+  background: #fff;
+  border-radius: 14px;
+  padding: 56px 24px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, .07);
+}
+
+.empty-icon { margin: 0 0 12px; font-size: 40px; opacity: .4; }
+
+.empty-text {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.empty-sub { margin: 0; font-size: 14px; color: #94a3b8; }
+
+/* ---------- 页脚 ---------- */
+.site-footer {
+  margin-top: 22px;
+  padding: 0 20px;
+  text-align: center;
+  font-size: 13px;
+  color: #94a3b8;
+}
+
+/* ---------- 小屏适配（手机上也好用） ---------- */
+@media (max-width: 480px) {
+  .site-title { font-size: 26px; }
+  .site-header { padding: 28px 20px 24px; }
+  .hot-item { padding: 13px 14px; gap: 10px; }
+  .item-title { font-size: 15px; }
+}

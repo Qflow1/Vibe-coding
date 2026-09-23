@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>今日热搜 · 3 分钟看完今天全网在传什么</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ① 顶部区 -->
+  <header class="site-header">
+    <h1 class="site-title">今日热搜</h1>
+    <p class="site-desc">3 分钟看完今天全网在传什么</p>
+    <p class="site-note">⚠️ 当前为<b>示例数据</b>，用于演示页面效果，非真实平台数据</p>
+  </header>
+
+  <!-- ② 筛选区 -->
+  <section class="filter-area">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input
+        type="text"
+        id="keywordInput"
+        class="search-input"
+        placeholder="输入关键词，只看你关心的"
+        autocomplete="off">
+    </div>
+    <p class="filter-hint" id="filterHint"></p>
+  </section>
+
+  <!-- ③ 列表区 -->
+  <main class="list-area">
+    <ol class="hot-list" id="hotList"></ol>
+
+    <!-- ④ 空状态：筛选无结果时显示 -->
+    <div class="empty-state" id="emptyState" hidden>
+      <p class="empty-icon">🔍</p>
+      <p class="empty-text">没有找到相关内容</p>
+      <p class="empty-sub">换个关键词试试</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <p>共 30 条示例数据 ｜ 点击任意条目会在新窗口打开搜索结果</p>
+  </footer>
+
+  <!-- 加载顺序：先数据，后逻辑 -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
