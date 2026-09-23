@@ -1,0 +1,238 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>AGENTS.md 预览 - Day 6</title><style>
+body{font-family:"Microsoft YaHei",sans-serif;background:#fff;color:#1e293b;
+     max-width:1000px;margin:0 auto;padding:36px 44px;line-height:1.75;font-size:15.5px}
+h1{font-size:27px;border-bottom:3px solid #2563eb;padding-bottom:12px;margin-bottom:6px}
+h2{font-size:21px;color:#1e40af;margin-top:30px;border-left:5px solid #2563eb;padding-left:12px}
+h3{font-size:17.5px;color:#0f766e;margin-top:22px;border-left:4px solid #14b8a6;padding-left:10px}
+h2.hl,h3.hl{background:#fef3c7;outline:3px solid #f59e0b;outline-offset:4px;border-radius:4px;padding:8px 12px}
+blockquote{background:#f1f5f9;border-left:4px solid #94a3b8;margin:8px 0;padding:9px 16px;color:#475569;font-size:14.5px}
+.code{background:#0f172a;color:#e2e8f0;padding:14px 18px;border-radius:8px;
+      font-family:Consolas,monospace;font-size:14px;line-height:1.6;white-space:pre-wrap}
+.li{margin:3px 0}
+.li.n{margin-left:14px}
+.sp{height:8px}
+p{margin:5px 0}
+hr{border:none;border-top:1px solid #e2e8f0;margin:22px 0}
+.legend{background:#ecfdf5;border:1px solid #10b981;border-radius:8px;
+        padding:12px 18px;margin-bottom:22px;font-size:14.5px;color:#065f46}
+</style></head><body><div class="legend">📌 本页预览 <b>AGENTS.md</b>（184 行）。<b>黄色框</b>标出的两处即今日任务要核对的内容：<br>① 原有一章第 3 条「不提前做以后的天数」&nbsp;&nbsp;② 今天新追加的「附 7」</div><h1>项目规则（AGENTS.md）</h1>
+<div class="sp"></div>
+<p>我每天会把「今日任务清单」整块发给你，那是我今天要做的全部内容。请严格按下面的规则配合我，不要做清单以外的事。</p>
+<div class="sp"></div>
+<h2 class="hl">一、任务边界（最重要）</h2>
+<div class="sp"></div>
+<div class="li n">1. 收到我的任务清单后，**这份清单就是今天唯一的任务范围**，只做清单里写的事。</div>
+<div class="li n">2. 不做清单以外的工作：不建多余的文件、不写清单没提的功能、不顺手优化已有代码。你觉得可以改得更好，先跟我说一句，等我点头。</div>
+<div class="li n">3. 不提前做以后的天数。只有我把某天的清单发给你、并明确说「现在开始做 Day X」，才允许动那天。</div>
+<div class="li n">4. 拿不准是否在范围内，先问我，不要猜。</div>
+<div class="sp"></div>
+<h2>二、交互式推进</h2>
+<div class="sp"></div>
+<div class="li n">1. 收到清单后，先只给我今天的执行计划：按什么顺序做、每步怎么做、哪些要我自己动手。**写完停下，等我确认。**</div>
+<div class="li n">2. 确认后**一次只做一个步骤**，绝不连着往下做。</div>
+<div class="li n">3. 每步做完立刻停下，告诉我三件事：做了什么、改了哪些文件、怎么验证（附我能亲眼确认的结果）。</div>
+<div class="li n">4. 然后**停下等我回复「进入下一板块」**。我没说这四个字，你就不要继续。</div>
+<div class="li n">5. 「进入下一板块」只对当前这一步有效，不代表可以一路做到收尾。</div>
+<div class="sp"></div>
+<h2>三、人机分工</h2>
+<div class="sp"></div>
+<div class="li n">1. 需要我人工操作的（注册账号、点按钮、装软件、截图等）：不要替我做，也不要假装已完成。只告诉我：这步在干什么、一二三步怎么做、做完我该看到什么、容易踩什么坑，然后停下等我。</div>
+<div class="li n">2. 需要你生成的内容（写文档、建文件、写代码）：**等我说了再做**，不要在我刚说「开始吧」时就把整天的东西生成出来。</div>
+<div class="li n">3. 需要拍板的地方（选方案、起名字、定风格），把选项和各自代价列给我选，不要自己决定。</div>
+<div class="li n">4. 验证结果要我能亲眼确认（页面能打开、文件能看到、命令有输出），不接受「已经完成了」这种口头结论。</div>
+<div class="sp"></div>
+<h2>四、讲清楚环节（我是来学的）</h2>
+<div class="sp"></div>
+<div class="li n">1. 每个步骤开始前，先告诉我：它在整个作品里是什么位置、为什么现在做、做完会变成什么样。</div>
+<div class="li n">2. 每步用「做了什么 → 结果 → 为什么」讲明白，不要只给结果。</div>
+<div class="li n">3. 我不懂的概念（命令、报错、术语、配置），一两句话解释清楚，不要默认我会。</div>
+<div class="li n">4. 报错时先告诉我错在哪、可能什么原因、打算怎么修，我同意后再动手。不要输出教程式长文。</div>
+<div class="sp"></div>
+<h2>五、Git 与提交</h2>
+<div class="sp"></div>
+<div class="li n">1. 我授权你代为执行 git 提交和推送，但**提交前必须先列出**本次会改动哪些文件、每个文件属于哪天的任务，等我确认后再提交。</div>
+<div class="li n">2. commit 信息格式：`Day X｜一句话说明`。</div>
+<div class="li n">3. 密钥、`.env`、数据库连接串永远不进代码、不进提交。</div>
+<div class="li n">4. 一天的任务全部做完、我核对完文件清单之后才提交，中途不要边做边提交。</div>
+<div class="sp"></div>
+<h2>六、当日收尾</h2>
+<div class="sp"></div>
+<div class="li n">1. 我说「今天做完了」之后，请你逐条对照清单里的「完成标准」，输出一张表：完成标准 / 状态（已完成·部分完成·未完成）/ 证据（文件、页面、命令输出）。</div>
+<div class="li n">2. 核对必须诚实，没做完、做了一半、跳过没做的，直接标出来并说明原因，不要为了凑「全部完成」而模糊处理。</div>
+<div class="li n">3. 有未完成项时，告诉我还差什么、接不接着做，**由我决定**，不要自己往下做。</div>
+<div class="li n">4. 全部完成时，按清单的「收尾指令」整理当天成果，提醒我该交哪张截图、该在群里回什么。</div>
+<div class="sp"></div>
+<h2>七、出问题的时候</h2>
+<div class="sp"></div>
+<div class="li n">1. 我要求撤销时，用安全回退（`git revert`，保留历史），禁止 `git reset --hard` 和强制推送。</div>
+<div class="li n">2. 回退前先和我确认恢复到哪个提交，回退后列出当前状态让我核对。</div>
+<div class="li n">3. 同一个操作反复失败时停下来报告，说清楚试了什么、报什么错、你判断的原因，不要循环重试。</div>
+<div class="sp"></div>
+<hr>
+<div class="sp"></div>
+<h2>附：本项目专属信息</h2>
+<div class="sp"></div>
+<blockquote>以下是 2026-09-16 追加的本项目实际情况，不属于课程官方模板原文，但优先级和上面同样高，请一并遵守。</blockquote>
+<div class="sp"></div>
+<h3>附 1. 工作区位置</h3>
+<div class="sp"></div>
+<div class="li">• 本项目正式工作区：`D:\Vibe coding\Project`</div>
+<div class="li">• 28 天训练营期间，所有文件、代码都在这个文件夹里进行，不要到别的地方建东西。</div>
+<div class="sp"></div>
+<h3>附 2. ⚠️ 绝对不要碰的目录</h3>
+<div class="sp"></div>
+<div class="li">• `D:\Vibe coding\WorkBuddy` 是 **WorkBuddy 软件的安装目录**（里面全是 exe、dll 等程序文件），**不是工作区**。</div>
+<div class="li">• 禁止把它当工作区使用；禁止在里面新建、修改、删除任何文件。</div>
+<div class="sp"></div>
+<pre class="code">
+D:\Vibe coding\
+├── Project\        ← 正式工作区（AI 只在这里干活）
+│   └── AGENTS.md   ← 本规则文件
+└── WorkBuddy\      ← WorkBuddy 软件安装目录（禁止改动）
+</pre>
+<div class="sp"></div>
+<h3>附 3. 我的技术背景（沟通要求）</h3>
+<div class="sp"></div>
+<div class="li">• 我是**编程零基础初学者**，参加的是 28 天 VibeCoding 打卡训练营。</div>
+<div class="li">• 全程用**中文**交流。</div>
+<div class="li">• 解释要说大白话：先讲&quot;这是什么、为什么现在做、像什么&quot;，再出现专业名词；我不懂的词要当场解释。</div>
+<div class="li">• 不要默认我会任何命令、术语或配置。</div>
+<div class="sp"></div>
+<h3>附 4. 每日交付习惯（2026-09-16 追加）</h3>
+<div class="sp"></div>
+<div class="li">• 每天收尾输出「作业完成情况表」时，除了对话里的表格，**还要额外生成一张图片版**（PNG），方便直接交作业。</div>
+<div class="li">• **所有截图统一存放在工作区的 `Picture` 子文件夹里**，不再散落在桌面。</div>
+<div class="li">• **每天一个独立的打包文件夹**，路径规范：</div>
+<div class="sp"></div>
+<p>  ```</p>
+<p>  D:\Vibe coding\Project\Picture\&lt;日期&gt; Vibe coding作业\</p>
+<p>  ```</p>
+<div class="sp"></div>
+<p>  （例：`Picture\2026-09-16 Vibe coding作业\`，文件夹名 = 日期 + &quot; Vibe coding作业&quot;）</p>
+<div class="sp"></div>
+<div class="li">• 当天所有作业截图（含完成情况表图片版）都放进这个当日文件夹里，一天一个，不要混放。</div>
+<div class="li">• 完成情况表图片命名：`DayX-完成情况表.png`；工作区/操作类截图命名：`DayX-用途说明.png`。</div>
+<div class="li">• 图片内容必须与对话中的核对表**完全一致**，诚实标注未完成项，不美化。</div>
+<div class="sp"></div>
+<h3>附 5. 项目方向（2026-09-17 追加；2026-09-19 更新）</h3>
+<div class="sp"></div>
+<p>**28 天课程结束后，我要能拿出来给人看的三个作品（三个都要做）：**</p>
+<div class="sp"></div>
+<div class="li n">1. **大学生日程规划网站** —— 课表、待办、时间分配</div>
+<div class="li n">2. **英语综合学习网站** —— 词汇、听力、练习</div>
+<div class="li n">3. **今日热搜网站** —— 全网热点聚合，让普通用户用最短时间了解今天大家都在看什么（2026-09-19 追加）</div>
+<div class="sp"></div>
+<p>**仓库安排（本人 2026-09-17 决定）：**</p>
+<div class="sp"></div>
+<div class="li">• 本仓库 `Vibe-coding` = **学习过程仓库**（每日作业、规则文件、截图归档）</div>
+<div class="li">• 上述**三个作品各自独立建仓库**，不塞进本仓库里</div>
+<p>  - ⏳ **状态：尚未创建**（2026-09-17 20:01 用户决定「先不建立仓库」，计划 Day 7 开始做 MVP 时再建）</p>
+<p>  - 这一句是**将来的安排**，不是已完成事项。创建后请把本行状态改为「✅ 已创建」并补上仓库地址</p>
+<div class="sp"></div>
+<p>**给 AI 的提醒：**</p>
+<div class="sp"></div>
+<div class="li">• 动任何代码前，先确认这是「哪一天的哪个任务」，不要跨天开工、不要提前实现以后的功能</div>
+<div class="li">• 我是编程零基础，解释必须用大白话</div>
+<div class="li">• 涉及作品的技术选型（框架、目录结构）时，先把选项列给我选，不要替我做决定</div>
+<div class="li">• **三个作品是三条并行的线**：以后每天执行任务时，都要留意这三个网站的进度，不要只顾当天提到的那一个（2026-09-19 追加）</div>
+<div class="sp"></div>
+<h3>附 6. commit 信息规范（2026-09-17 追加，Day 2 起生效）</h3>
+<div class="sp"></div>
+<p>**从 Day 2 开始，所有提交一律按这个格式：标题一行 + 正文两行。**</p>
+<div class="sp"></div>
+<pre class="code">
+Day X｜一句话说清这次做了什么
+
+改了什么：&lt;对已有文件做了哪些修改&gt;
+加了什么：&lt;新增了哪些文件&gt;
+</pre>
+<div class="sp"></div>
+<p>**细则：**</p>
+<div class="sp"></div>
+<div class="li n">1. **标题**固定以 `Day X｜` 开头（X 是当天的天数），后面跟一句话。全角竖线 `｜`，不是 `|`。</div>
+<div class="li n">2. **正文两行**各用「改了什么：」「加了什么：」起头，写清楚具体是哪些文件、做了什么。</div>
+<div class="li n">3. 某天**没有**新增文件时写「加了什么：无」；**没有**修改已有文件时写「改了什么：无」。两行都不要省略。</div>
+<div class="li n">4. 补交、修补类提交同样照此格式，天数写当天。</div>
+<div class="li n">5. 提交信息里**不写**任何密码、密钥、邮箱等敏感内容。</div>
+<div class="sp"></div>
+<p>**执行样例（Git 命令）：**</p>
+<div class="sp"></div>
+<pre class="code">
+git commit -m &quot;Day 3｜首页加上顶部导航栏&quot; \
+           -m &quot;改了什么：index.html 增加导航区、调整了页面边距&quot; \
+           -m &quot;加了什么：css/style.css&quot;
+</pre>
+<div class="sp"></div>
+<p>**验收自检**：提交后用 `git log -1` 看一眼，标题应以 `Day ` 开头，正文应能看到「改了什么：」和「加了什么：」两行。</p>
+<div class="sp"></div>
+<h3 class="hl">附 7. 改完必须报「未提交改动」（2026-09-23 追加，Day 6 起生效）</h3>
+<div class="sp"></div>
+<p>**一句话**：只要动了文件，就要**主动**告诉子豪&quot;现在有几处改动还没提交&quot;，不用等他问。</p>
+<div class="sp"></div>
+<p>**为什么加这条（防的是什么）**：</p>
+<div class="sp"></div>
+<div class="li">• 已经真实发生过两次：文件改了，但子豪没说「提交」，改动就**一直留在文件里、静静地未被记录**。等到下一轮一起提交时，**提交信息漏掉了上一轮的内容**（只能靠 `git commit --amend` 补救）。</div>
+<div class="li">• 关键认知：**&quot;改完了&quot; ≠ &quot;提交了&quot;** —— 改动只写在文件里，git 只有在你发话后才为它存档。**没有提交的改动，回退时会一起消失，也说不清它是哪次做的。**</div>
+<div class="li">• 所以这条规则防的是：**改动被遗忘在文件里，最终丢失或说不清来源。**</div>
+<div class="sp"></div>
+<p>**具体怎么做（每次改完文件立刻执行）**：</p>
+<div class="sp"></div>
+<div class="li n">1. 用 `git status --short` 看一眼当前工作区，把**所有未提交的改动**（不只本轮新的）列出来。</div>
+<div class="li n">2. 主动在回复里加一行醒目提示，格式建议：</div>
+<div class="sp"></div>
+<p>   ```</p>
+<p>   ⚠️ 当前有 N 处改动尚未提交，等你确认后再提交打包</p>
+<p>   ```</p>
+<div class="sp"></div>
+<div class="li n">3. 如果**上一轮就有未提交的改动**，必须在这一行里一并写出来（写明是&quot;上一轮遗留&quot;），**不能只讲本轮新增的**。</div>
+<div class="li n">4. 列提交清单时，**把工作区里所有未提交改动全部列出**，逐个标明属于哪天的任务。</div>
+<div class="li n">5. 不允许&quot;攒改动&quot;：如果连续两轮都有改动，第一次改完就要提醒一次，不能等第二次才说。</div>
+<div class="sp"></div>
+<p>**与第五章的分工**：</p>
+<div class="sp"></div>
+<div class="li">• 第五章第 1 条管的是「**提交时**：先列清单等我确认」</div>
+<div class="li">• 本附 7 管的是「**提交前**：任何时刻都要让我知道筐里有东西」</div>
+<div class="li">• 两条配合，确保&quot;未提交的改动&quot;永远在明面上。</div>
+<div class="sp"></div>
+<h3>附 8. 提交前必过清单 · 检查项版（2026-09-23 追加，Day 6 余力加练）</h3>
+<div class="sp"></div>
+<blockquote>附 7 是**叮嘱**（&quot;记得报备&quot;），附 8 是**验收表** —— 换成任何人（队友、以后接手的朋友、未来的自己）都能照着核一遍的写法：**每一条都有动作、有命令、有&quot;看到什么才算过&quot;**。</blockquote>
+<div class="sp"></div>
+<p>**每次提交前，从上往下逐条打勾：**</p>
+<div class="sp"></div>
+<p>| # | 检查动作（照做即可） | 通过标准（看到什么才算过） | 为什么这么做（它在防什么） |</p>
+<p>|---|---|---|---|</p>
+<p>| 1 | 跑 `git status --short` | **输出为空** → 没有未提交改动，可以进入提交流程 | **你不可能保护你不知道存在的东西。** 先看清&quot;筐里有什么&quot;，再决定做什么 |</p>
+<p>| 2 | 若第 1 步**有**输出：逐个看文件名 | 每一个输出行都**能说出&quot;它属于哪天的任务&quot;**；说不出的先问，不要提交 | 防&quot;**张冠李戴**&quot;：上一轮的遗留混进这一轮。说得出 = 心里有数；说不出 = 有东西脱离掌控 |</p>
+<p>| 3 | 跑 `git diff --stat` | 改动范围符合任务要求。任务写着&quot;只允许追加&quot;时，**deletions 必须为 0** | 防&quot;**手滑改多了**&quot;。数字不会撒谎 —— &quot;我保证没删&quot;是口头结论，`deletions: 0` 是硬证据 |</p>
+<p>| 4 | 写提交信息时，回头看**上一轮**有没有遗留改动 | 若有，**必须写进信息里**并标注&quot;（含上一轮遗留）&quot; | ⭐ **唯一查&quot;记忆&quot;而非查文件的一条**：`git status` 看不出改动是哪一轮做的，这个信息只存在于对话里，必须由人来补 |</p>
+<p>| 5 | 提交后跑 `git log -1` | 标题以 `Day ` 开头，正文能看到「改了什么：」「加了什么：」两行 | 防&quot;**格式写漏**&quot;。此刻**还来得及改**（未推送可 `--amend`）；推送后再发现就只能补发新提交 |</p>
+<p>| 6 | 推送后跑 `git ls-remote origin` | 云端 `refs/heads/main` 的哈希 **= 本地最新提交哈希** | 防&quot;**假推送**&quot;。本地说&quot;成功&quot;= 邮局说&quot;我收了&quot;；云端哈希对上 = 打电话问到&quot;那边真收到了&quot; |</p>
+<div class="sp"></div>
+<p>**这六条为什么按这个顺序**：</p>
+<div class="sp"></div>
+<pre class="code">
+提交前                 →   提交中            →   提交后
+① 看清筐里             ④ 补上记忆里的遗留   ⑤ 验信息格式
+② 逐个认领                                 ⑥ 验云端收货
+③ 看改了多少
+</pre>
+<div class="sp"></div>
+<div class="li">• **前三条查&quot;现状&quot;**（命令告诉你）</div>
+<div class="li">• **第四条补&quot;记忆&quot;**（只有人能补）</div>
+<div class="li">• **后两条验&quot;结果&quot;**（信息对不对 + 送到了没）</div>
+<div class="sp"></div>
+<p>**用法说明**：</p>
+<div class="sp"></div>
+<div class="li">• 六条**按顺序**做，前一条不过就别进下一条。</div>
+<div class="li">• 第 1、2 条如果卡住，说明**有东西没归位** —— 这时先问我，不要擅自提交。</div>
+<div class="li">• 这份清单不只给 AI 用：**子豪自己提交、或将来跟队友协作时**，同一张表照样能核。</div>
+<div class="li">• 最要紧的其实是**第 3 条和第 6 条**（一个防手滑、一个防假推送）；其余四条偏&quot;确认心安&quot;，但&quot;确认心安&quot;不是浪费 —— 漏一次就要多花一次 `--amend` 的功夫。</div>
+<div class="sp"></div>
+<p>**它和附 7 的关系**：附 7 管「**随时提醒**」（过程中），附 8 管「**提交前把关**」（终点前）。两条合起来，等于给&quot;改动会不会丢&quot;上了双保险。</p>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div></body></html>

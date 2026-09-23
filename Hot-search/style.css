@@ -10,23 +10,58 @@
      · 强调色 = 朱砂红（印章）+ 石青（点缀）
      · 字体 = 优先宋体/楷体，横细竖粗，有笔锋感
      · 装饰 = 顶部水墨晕染、卡片左侧毛笔竖条、印章式排名
+   【Day 9 再改版】配色改为【正统水墨色】
+     · 原来的纸偏黄（米黄），是"旧书页"的感觉
+     · 现在改成【冷白生宣】：纸是素净的冷白，去掉黄气
+     · 墨按"墨分五色"分层：焦墨 / 浓墨 / 重墨 / 淡墨 / 清墨
+   【Day 9 三改版】色调改为【浓墨重彩】
+     · 用户要求"更深更浓"
+     · 思路不是简单调暗，而是【把反差拉开】：
+         纸压成浅灰（不再是纯白）→ 墨才能"跳"出来
+         墨全部加深，焦墨直接到近黑
+         卡片反而更白（接近纯白）→ 与深灰底形成强对比
+         墨晕和阴影加重 → 有"墨渗进纸里"的重量感
+     · 朱砂也加深，跟浓墨咬得住
+   【Day 9 四改版】加上【墨水在纸上晕染】的质感
+     · 用户要求"要体现出墨水在纸上晕染的感觉"
+     · 核心是模仿真墨扩散的三个特征，全部靠 CSS 伪造（零图片）：
+         ① 浓度递减：中心实、越往外越稀（多层 radial-gradient）
+         ② 边缘毛糙：多团墨错位叠加 + filter: blur() 把硬边揉毛
+         ③ 墨渍积痕：墨停住的地方会凝出一条深色（题头底部那道）
+     · 具体落到：题头（泼墨）、卡片（滴墨）、排名（墨点）、
+        搜索框 / 状态框（墨线框）、页脚（一道手划的墨痕）
    ============================================================ */
 
 /* ---------- 水墨配色（先定好，下面全部引用这几个变量） ----------
-   好处：以后想微调色调，只改这里几行，整站跟着变。 */
+   好处：以后想微调色调，只改这里几行，整站跟着变。
+
+   墨色分层的依据是国画的「墨分五色」：
+     焦墨 → 最浓，用在标题        浓墨 → 正文
+     重墨 → 次要文字             淡墨 → 提示文字
+     清墨 → 边框、分隔线这种若有若无的东西 */
 :root {
-  --paper:        #f4f1e9;   /* 宣纸底色：偏暖的米白 */
-  --paper-deep:   #eae5d8;   /* 稍深一点的纸，用于分区 */
-  --paper-card:   #fbf9f4;   /* 卡片纸：比底色更亮，像新铺的一张纸 */
-  --ink:          #2b2b2f;   /* 松烟墨：正文字色，不是纯黑 */
-  --ink-strong:   #141417;   /* 浓墨：标题 */
-  --ink-mid:      #5a5a60;   /* 中墨：次要文字 */
-  --ink-light:    #8c8c93;   /* 淡墨：提示文字 */
-  --ink-wash:     rgba(43, 43, 47, .08);  /* 墨晕：用于阴影和分隔 */
-  --cinnabar:     #a8322a;   /* 朱砂：印章红，全站唯一的重色 */
-  --cinnabar-lt:  #c04a3f;   /* 浅朱砂：悬浮态 */
-  --azurite:      #3d5a75;   /* 石青：冷色点缀 */
-  --border-ink:   rgba(43, 43, 47, .14);  /* 墨线：作边框 */
+  /* —— 纸：三档深浅，造出层次 —— */
+  --paper:        #d8dbdf;   /* 底纸：更深一档 → 卡片才能"浮"出来 */
+  --paper-deep:   #c9cdd2;   /* 分区/题头：再深一档 */
+  --paper-card:   #ffffff;   /* 卡片：纯白 → 与灰底形成最强对比 */
+
+  /* —— 墨：五色拉开距离，每档都差得明显 —— */
+  --ink:          #0a0d10;   /* 焦墨：最浓，标题用 */
+  --ink-strong:   #000000;   /* 纯黑：极少数重点 */
+  --ink-deep:     #1e2228;   /* 浓墨：正文 */
+  --ink-mid:      #454b53;   /* 重墨：次要文字 */
+  --ink-light:    #767d85;   /* 淡墨：提示文字 */
+  --ink-faint:    #9ba2a9;   /* 清墨：极淡的装饰线 */
+  --ink-wash:     rgba(10, 13, 17, .16);  /* 墨晕：阴影 */
+
+  /* —— 两点彩色 —— */
+  --cinnabar:     #8e1f1a;   /* 朱砂：印章红 */
+  --cinnabar-lt:  #a82c26;   /* 浅朱砂 */
+  --azurite:      #27435c;   /* 石青 */
+
+  /* —— 线条：卡片边框要淡（清墨），分隔线要重 —— */
+  --border-ink:   rgba(10, 13, 17, .13);
+  --border-card:  rgba(10, 13, 17, .07);
 }
 
 /* ---------- 全局 ---------- */
@@ -40,13 +75,26 @@ body {
                "STKaiti", "KaiTi", Georgia, serif;
   color: var(--ink);
   line-height: 1.75;
-  /* 宣纸底：叠三层极淡的径向色斑，模拟纸张的云纹与陈旧感
-     （纯 CSS 画，不加载任何图片，双击打开也不会因为跨域失败） */
+  /* 宣纸底：叠多层极淡的冷灰色斑 —— 模拟水墨在纸上泅开的样子
+     ⚠️ 每一层都是"中间浓、边缘散"的径向渐变，
+        多叠几层就有了"墨在纸纤维里慢慢渗开"的不规则感
+     （纯 CSS，零图片依赖） */
   background-color: var(--paper);
   background-image:
-    radial-gradient(ellipse 70% 50% at 12% 8%,  rgba(200, 190, 168, .30), transparent 60%),
-    radial-gradient(ellipse 60% 45% at 88% 22%, rgba(210, 202, 182, .26), transparent 62%),
-    radial-gradient(ellipse 80% 40% at 50% 96%, rgba(196, 186, 164, .22), transparent 65%);
+    /* ① 题头后面那团最大的墨（和 .site-header::before 呼应，形成整体感） */
+    radial-gradient(ellipse 40% 26% at 17% 6%,  rgba(72, 84, 98, .46), transparent 66%),
+    radial-gradient(ellipse 24% 15% at 22% 10%, rgba(50, 62, 76, .30), transparent 70%),
+    /* ② 右上角一小团，和左上呼应 */
+    radial-gradient(ellipse 28% 20% at 88% 15%, rgba(85, 98, 112, .28), transparent 70%),
+    /* ③ 底部一片横向的淡墨，远山的感觉 */
+    radial-gradient(ellipse 62% 24% at 50% 97%, rgba(80, 93, 107, .30), transparent 74%),
+    radial-gradient(ellipse 40% 14% at 30% 100%, rgba(70, 82, 96, .20), transparent 76%),
+    /* ④ 中间几个极淡的小墨点，破掉"纯色一块"的呆板 */
+    radial-gradient(circle 110px at 62% 42%, rgba(95, 108, 122, .12), transparent 70%),
+    radial-gradient(circle 150px at 34% 68%, rgba(95, 108, 122, .10), transparent 72%),
+    /* ⑤ 两团贴在左右边缘的墨，接住两侧装饰列，避免"中间有墨、两边干净"的割裂 */
+    radial-gradient(ellipse 14% 36% at 0% 40%,  rgba(80, 93, 107, .16), transparent 72%),
+    radial-gradient(ellipse 14% 36% at 100% 62%, rgba(80, 93, 107, .14), transparent 72%);
   background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
@@ -64,32 +112,92 @@ body {
    ⓪ 左右两侧的国风装饰（宽屏才显示）
    ------------------------------------------------------------
    做法：固定在视口两侧，用 calc(50% - ...) 把自己推到内容区外侧。
-   ⚠️ 内容区是 720px 居中，两侧各留 360px 起算。
-      屏幕不够宽时（装不下内容区 + 两侧装饰）自动隐藏，不会挤到内容。
+
+   【Day 9 改版】原来只有 200px 宽的一小条，屏幕最外侧还是空的。
+   现在改成【铺满整个侧边】：宽度拉到 250px，元素从上到下排满，
+   并用 space-evenly 让它们均匀铺开，不再是"中间挤一堆"。
+
+   ⚠️ 屏幕不够宽时自动隐藏，不会挤到内容。
    ============================================================ */
 .side-deco {
   position: fixed;
   top: 0;
   bottom: 0;
-  width: 200px;
+  width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 22px;
+  justify-content: space-evenly;  /* 从上到下均匀铺开 */
+  gap: 0;
   pointer-events: none;     /* 不挡鼠标，纯装饰 */
   user-select: none;
   color: var(--ink);        /* 子元素用 currentColor 继承墨色 */
   z-index: 0;
+  padding: 26px 0;
 }
 
-/* 左列：贴在内容区左外侧（再往外推一点，留出呼吸感） */
-.side-left  { left:  calc(50% - 360px - 216px); }
-/* 右列：贴在内容区右外侧 */
-.side-right { right: calc(50% - 360px - 216px); }
+/* ⭐ 晕染：每个图案背后垫一团"墨韵"，线条本身保持清晰
+   ------------------------------------------------------------
+   ⚠️ 这里改过两次，教训记一下：
+     第一版是给图案本身加 filter:blur() → 线条被糊成一团灰，
+     截图一看"什么都看不清了"。
+     正确做法（现在这版）：
+       · 图案本体（SVG）保持清晰 → 还能认出是竹子/梅花
+       · 背后用 ::after 铺一团模糊的同色 → 那是墨在纸里洇开的部分
+     合起来 = 毛笔画的线条 + 纸纤维里的晕       */
+.side-deco > div {
+  position: relative;
+}
+
+.side-deco > div::after {
+  content: "";
+  position: absolute;
+  inset: -14px;
+  background: currentColor;
+  opacity: .085;
+  filter: blur(12px);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* 两侧的泼墨晕染（铺在最外层）—— 也是多层叠加，做出洇开的感觉 */
+.side-deco::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 46% 22% at 50% 4%,  rgba(95, 108, 122, .30), transparent 72%),
+    radial-gradient(ellipse 34% 16% at 44% 8%,  rgba(70, 82, 96, .18), transparent 76%),
+    radial-gradient(ellipse 42% 18% at 50% 52%, rgba(105, 118, 132, .15), transparent 74%),
+    radial-gradient(ellipse 40% 20% at 50% 96%, rgba(95, 108, 122, .26), transparent 72%);
+}
+
+/* 左列：贴住屏幕左侧（不再留那 185px 空档） */
+.side-left  { left: 0; }
+/* 右列：贴住屏幕右侧 */
+.side-right { right: 0; }
 
 /* 两侧的竖排文字方向一致（都从上往下读） */
 .side-left, .side-right { text-orientation: upright; }
+
+/* ---------- 两侧最外缘的一道竖界栏（像书页的框线） ---------- */
+.side-deco::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(180deg,
+              transparent, var(--border-ink) 12%,
+              var(--border-ink) 88%, transparent);
+  opacity: .7;
+}
+
+.side-left::after  { right: 14px; }
+.side-right::after { left: 14px; }
 
 /* ---------- 回纹：一道竖着的连续方折纹 ----------
    回纹是中式最经典的边饰（连续方折、首尾相接）。
@@ -97,7 +205,7 @@ body {
 .deco-fret {
   width: 30px;
   height: 150px;
-  opacity: .55;
+  opacity: .90;
   background-image:
     /* 两条竖向主线，夹出中间的"回"字框 */
     linear-gradient(90deg,
@@ -124,8 +232,8 @@ body {
   font-size: 18px;
   letter-spacing: 0;
   line-height: 1.4;
-  color: var(--ink-mid);
-  opacity: .52;
+  color: var(--ink);
+  opacity: .86;
 }
 
 /* 诗句中间的朱砂小点，像句读 */
@@ -149,15 +257,15 @@ body {
   color: var(--cinnabar);
   border: 2px solid var(--cinnabar);
   border-radius: 3px;
-  opacity: .40;
-  box-shadow: inset 0 0 0 1px rgba(168, 50, 42, .3);
+  opacity: .86;
+  box-shadow: inset 0 0 0 1px rgba(142, 31, 26, .3);
 }
 
 /* ---------- 云纹 ---------- */
 .deco-cloud {
   width: 76px;
   color: var(--ink);
-  opacity: .28;
+  opacity: .72;
 }
 
 .deco-cloud svg { width: 100%; height: auto; display: block; }
@@ -166,7 +274,7 @@ body {
 .deco-bamboo {
   width: 36px;
   color: var(--ink);
-  opacity: .24;
+  opacity: .66;
 }
 
 .deco-bamboo svg { width: 100%; height: auto; display: block; max-height: 104px; }
@@ -175,7 +283,7 @@ body {
 .deco-wave {
   width: 88px;
   color: var(--azurite);
-  opacity: .35;
+  opacity: .78;
 }
 
 .deco-wave svg { width: 100%; height: auto; display: block; }
@@ -184,10 +292,46 @@ body {
 .deco-fan {
   width: 100px;
   color: var(--ink);
-  opacity: .30;
+  opacity: .74;
 }
 
 .deco-fan svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 梅花枝 ---------- */
+.deco-plum {
+  width: 92px;
+  color: var(--ink);
+  opacity: .74;
+}
+
+.deco-plum svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 假山石 ---------- */
+.deco-rock {
+  width: 104px;
+  color: var(--ink);
+  opacity: .68;
+}
+
+.deco-rock svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 兰花 ---------- */
+.deco-orchid {
+  width: 88px;
+  color: var(--ink);
+  opacity: .70;
+}
+
+.deco-orchid svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 松枝 ---------- */
+.deco-pine {
+  width: 96px;
+  color: var(--ink);
+  opacity: .74;
+}
+
+.deco-pine svg { width: 100%; height: auto; display: block; }
 
 /* ⚠️ 屏幕装不下时隐藏：内容 720 + 两侧各留 230 → 需要约 1200px */
 @media (max-width: 1240px) {
@@ -196,19 +340,116 @@ body {
 
 /* ============================================================
    ① 顶部区 —— 水墨晕染的题头
+   ------------------------------------------------------------
+   ⭐【Day 9 晕染加强】改造思路：从"渐变色块"变成"泼上去的一团墨"
+
+   原来它是"一块规则的渐变色砖"，问题在于：
+     · 四边是笔直的 → 一眼看出是网页元素，不是墨
+     · 浓度均匀 → 没有"渗"的过程
+
+   现在按真墨在纸上扩散的三个特征来做：
+     ① 中心浓、外圈淡 —— 墨滴落下时中间最实、越往外越稀
+     ② 形状不规则   —— 多团墨互相叠加、位置错开，边缘就毛了
+     ③ 有飞溅的墨点 —— 主墨团之外再撒几个小点，破掉"整块感"
+
+   实现上加了 ::before / ::after 两层"毛边墨晕"：
+     · ::before = 藏在卡片后面的几团大墨（不规则外扩）
+     · ::after  = 底部横向的一道"墨渍残留"（像墨顺纸流下去积的）
    ============================================================ */
 .site-header {
   position: relative;
   padding: 52px 32px 40px;
   margin-bottom: 30px;
-  overflow: hidden;
-  /* 宣纸上泼了一片淡墨：由深到浅，向右散开 */
+  /* ⚠️ 这里不能 overflow:hidden！
+     毛边墨晕要靠 ::before 探到卡片外面去，被裁掉就不像洇开了 */
+  overflow: visible;
+  background: transparent;
+  border-bottom: none;
+}
+
+/* 题头真正的"墨"：两层配合
+   ------------------------------------------------------------
+   ⚠️ 这块返工了三次，把结论记下来：
+
+   第一次：只用 CSS radial-gradient 堆 → 出来是一片【均匀的灰雾】，
+          像"屏幕脏了"，因为渐变的每层都是标准椭圆，形状太规矩。
+   第二次：把不透明度拉高 → 灰度够了，但还是一团"色块"，
+          边界是渐变的软边，不像墨。
+   第三次（现在）：改成【SVG 画墨迹轮廓】——
+          · 用三次贝塞尔曲线勾勒出"一鼓一鼓"的不规则边界
+            （真墨落纸的边就是这样，被纸纤维挡着一顿一顿地渗）
+          · 内部再用 radialGradient 做中心浓、外圈散
+          · 最后 filter: blur() 把硬边揉毛
+          这样才真的是"一坨有形状的墨"，而不是"一块模糊的灰"。
+
+   CSS 的 ::before / ::after 现在退居辅助：
+     · ::before = 一层极淡的大范围底墨（把整块题头"打湿"）
+     · ::after  = 底部一道墨渍积痕
+   ============================================================ */
+/* ⚠️ 关键：z-index 别设成负数！
+   父元素 .site-header 是 position:relative 但没有背景色，
+   子元素 z-index:-1 会一路沉到 body 背景之后 → 墨团直接看不见。
+   正确做法：墨团留在 0 层，文字抬到 2 层（见下面那条）。
+
+   另一个坑：SVG 自己也是 inline 元素，会占文档流位置，
+   所以必须 position:absolute 把它抽出来，否则会把标题往下挤。 */
+.header-ink {
+  position: absolute;
+  /* ⚠️ 这里调过：原来 left:-40px 让墨团探到题头左边界外面去了，
+      而题头本身就贴着内容区左侧 —— 结果墨团左缘被屏幕切掉，
+      看着像"墨跑到纸外面了"。
+      现在改成只往外探 16px，墨团完整留在纸上。 */
+  top: -16px;
+  left: -16px;
+  width: calc(100% + 32px);
+  height: calc(100% + 38px);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 题头里的文字统统抬到墨团上面
+   ⚠️ 光靠 z-index 还不够 —— 上面截图里墨把标题和印章压灰了。
+      真正原因是【墨太浓的地方文字就糊了】，
+      所以要双管齐下：① 文字抬层  ② 文字自身加一点白色托底（见下） */
+.site-header > *:not(.header-ink) {
+  position: relative;
+  z-index: 2;
+}
+
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: -20px -38px -24px -38px;
+  z-index: 1;                /* 垫在 SVG 墨团（0 层）之上、文字（2 层）之下 */
+  border-radius: 6px;
   background:
-    radial-gradient(ellipse 90% 130% at 18% 0%,   rgba(43, 43, 47, .13), transparent 62%),
-    radial-gradient(ellipse 70% 100% at 62% 8%,   rgba(61, 90, 117, .10), transparent 64%),
-    linear-gradient(160deg, var(--paper-deep) 0%, var(--paper) 70%);
-  border-bottom: 1px solid var(--border-ink);
-  border-radius: 0 0 4px 4px;
+    /* 底部横向的墨渍（像纸从下往上吸上来的一层） */
+    radial-gradient(ellipse 72% 30% at 46% 97%, rgba(10, 13, 17, .14), transparent 72%),
+    /* 右上一点石青调的淡墨，和左侧呼应 */
+    radial-gradient(ellipse 42% 66% at 82% 4%,  rgba(39, 67, 92, .12), transparent 68%),
+    /* 把整块"打湿"：极淡但铺满，接住 SVG 墨团，避免墨团像贴上去的 */
+    radial-gradient(ellipse 96% 120% at 30% 20%, rgba(10, 13, 17, .07), transparent 76%);
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+/* 底部的一道"墨渍积痕"：墨在纸上停住、边缘凝出的一条深色 */
+.site-header::after {
+  content: "";
+  position: absolute;
+  left: -26px;
+  right: -26px;
+  bottom: -3px;
+  height: 2px;
+  pointer-events: none;
+  background: linear-gradient(90deg,
+              transparent 0%,
+              rgba(10, 13, 17, .20) 8%,
+              rgba(10, 13, 17, .42) 34%,
+              rgba(10, 13, 17, .30) 62%,
+              rgba(10, 13, 17, .16) 86%,
+              transparent 100%);
+  filter: blur(.6px);
 }
 
 /* 题头左上的朱砂印章：一个方框 + 「热搜」二字 */
@@ -230,8 +471,14 @@ body {
   color: var(--cinnabar);
   border: 2px solid var(--cinnabar);
   border-radius: 3px;
-  opacity: .85;
-  box-shadow: inset 0 0 0 1px rgba(168, 50, 42, .28);
+  opacity: .9;
+  /* 印泥吃进纸里的一点点红晕 */
+  box-shadow:
+    inset 0 0 0 1px rgba(142, 31, 26, .28),
+    0 0 10px 2px rgba(255, 255, 255, .55);   /* 白晕托底：印章压在墨上也看不清，得给它留白 */
+  /* ⚠️ 印章原来在墨团正上方，不加白底会整个看不见 */
+  background: rgba(255, 255, 255, .72);
+  filter: drop-shadow(0 0 2px rgba(142, 31, 26, .22));
 }
 
 .site-title {
@@ -240,24 +487,49 @@ body {
   font-weight: 500;
   letter-spacing: 8px;         /* 字距拉开，像落款的疏朗 */
   color: var(--ink-strong);
-  text-shadow: 0 1px 0 rgba(255, 255, 255, .6);
+  /* 【晕染 + 压墨】
+     ⚠️ 这里踩过坑：一开始只写"墨字落在纸上"的阴影，
+        结果墨团泼上来以后，标题被墨吃掉了，糊成一团。
+     正确做法（现在这版）源自国画：题字压在墨上时，
+     字周围要【留白】—— 也就是给字描一圈极淡的白色轮廓，
+     把字从墨里"抠"出来。这套阴影从里到外是：
+        0 0 1px 白  → 紧贴字形的一圈白线（最关键的一层）
+        2px 3px 6px 白 → 白晕向外扩，形成留白带
+        0 1px 2px 墨 → 字本身一点墨的厚度
+        1px 1px 3px 墨 → 落纸的投影 */
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, .95),
+    0 0 4px rgba(255, 255, 255, .85),
+    2px 3px 7px rgba(255, 255, 255, .70),
+    0 1px 2px rgba(10, 13, 17, .35),
+    1px 1px 3px rgba(10, 13, 17, .16);
 }
 
 .site-desc {
   margin: 0;
   font-size: 15px;
   letter-spacing: 2px;
-  color: var(--ink-mid);
+  color: var(--ink-deep);          /* 加深：墨团上必须用浓墨，淡墨会被吃掉 */
+  /* 白晕给足，把字从墨里"抠"出来 */
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 1),
+    0 0 5px rgba(255, 255, 255, .95),
+    1px 2px 8px rgba(255, 255, 255, .85),
+    0 1px 1px rgba(10, 13, 17, .25);
 }
 
 .site-note {
   margin: 18px 0 0;
   font-size: 12.5px;
   letter-spacing: .5px;
-  color: var(--ink-light);
+  color: var(--ink-deep);
   padding-left: 12px;
   /* 用左侧一道墨线代替图标，更素 */
-  border-left: 2px solid var(--border-ink);
+  border-left: 2px solid rgba(10, 13, 17, .28);
+  text-shadow:
+    0 0 1px rgba(255, 255, 255, 1),
+    0 0 5px rgba(255, 255, 255, .92),
+    1px 2px 6px rgba(255, 255, 255, .80);
 }
 
 .site-note b { color: var(--ink-mid); font-weight: 500; }
@@ -297,13 +569,21 @@ body {
   border-radius: 3px;
   outline: none;
   transition: border-color .2s, box-shadow .2s;
+  /* 【晕染】输入框也和卡片一样：中心干净、边缘洇一点墨 */
+  box-shadow:
+    inset 0 0 10px rgba(10, 13, 17, .04),
+    0 0 10px 1px rgba(10, 13, 17, .03);
 }
 
 .search-input::placeholder { color: var(--ink-light); letter-spacing: 1px; }
 
 .search-input:focus {
-  border-color: rgba(168, 50, 42, .45);
-  box-shadow: 0 0 0 3px rgba(168, 50, 42, .08);
+  border-color: rgba(142, 31, 26, .45);
+  /* 【晕染】聚焦时朱砂晕开一圈，像印泥刚沾上纸 */
+  box-shadow:
+    inset 0 0 12px rgba(142, 31, 26, .05),
+    0 0 0 3px rgba(142, 31, 26, .08),
+    0 0 16px 3px rgba(142, 31, 26, .06);
 }
 
 .filter-hint {
@@ -335,88 +615,128 @@ body {
    这条规则的意思是：带 hidden 属性的元素，一律不显示。 */
 [hidden] { display: none !important; }
 
-/* ---------- 一张卡片：像贴在纸上的一条 ---------- */
+/* ---------- 一张卡片：像一滴墨落在宣纸上 ----------
+   ⭐ 晕染三要素（怎么用 CSS 伪造"墨渗进纸里"）：
+     ① 浓度递减 —— 中间是纸的本色（干净的白），
+        只有【贴着边缘的一圈】才泛出淡墨，这样才是"墨渗到边界"而不是整块糊掉
+     ② 边缘毛糙 —— 用多层 box-shadow 造出柔和的边，
+        不再是一条笔直的数码边框
+     ③ 飞白     —— 左侧那道毛笔竖条中间断开、有轻重变化
+   ------------------------------------------------------------ */
 .hot-card {
   position: relative;
   display: flex;
   align-items: center;
   gap: 18px;
   padding: 15px 20px 15px 24px;
-  background: var(--paper-card);
-  border: 1px solid var(--border-ink);
-  border-radius: 3px;
+  border: none;
+  border-radius: 4px;
   cursor: pointer;
   transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+
+  /* ① 中心干净、边缘洇墨 —— 用内阴影更可控 */
+  background: var(--paper-card);
+  box-shadow:
+    inset 0 0 0 1px rgba(10, 13, 17, .055),      /* 极细的一圈墨线（纸边） */
+    inset 0 0 14px rgba(10, 13, 17, .05),        /* 向内洇开的淡墨 */
+    0 1px 3px  rgba(10, 13, 17, .06),            /* 外圈一点点投影 */
+    0 0 14px 2px rgba(10, 13, 17, .035);         /* 墨向纸里渗出的晕 */
 }
 
-/* 左侧一道"毛笔竖条"——用渐变做出起笔重、收笔轻的感觉 */
+/* 左侧一道"毛笔竖条"——起笔重、中段轻、收笔散（有轻重变化） */
 .hot-card::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0;
-  bottom: 0;
+  top: 6px;
+  bottom: 6px;
   width: 4px;
   background: linear-gradient(180deg,
-              rgba(43, 43, 47, .04) 0%,
-              rgba(43, 43, 47, .26) 30%,
-              rgba(43, 43, 47, .16) 100%);
-  border-radius: 2px 0 0 2px;
+              rgba(10, 13, 17, .10) 0%,
+              rgba(10, 13, 17, .46) 22%,
+              rgba(10, 13, 17, .30) 58%,
+              rgba(10, 13, 17, .12) 100%);
+  border-radius: 3px;
+  z-index: 1;
 }
 
 .hot-card:hover {
-  transform: translateX(3px);          /* 像纸被轻轻推了一下 */
-  background: #fffefa;
-  box-shadow: 4px 6px 18px rgba(43, 43, 47, .10);
-  border-color: rgba(43, 43, 47, .22);
+  transform: translateX(3px);
+  background: #fff;
+  /* 悬浮：墨晕扩大、加深 —— 像旁边又滴了一滴 */
+  box-shadow:
+    inset 0 0 0 1px rgba(10, 13, 17, .08),
+    inset 0 0 18px rgba(10, 13, 17, .06),
+    0 4px 12px rgba(10, 13, 17, .11),
+    0 0 24px 4px rgba(10, 13, 17, .055);
 }
 
 .hot-card:focus-visible {
-  outline: 2px solid rgba(168, 50, 42, .5);
+  outline: 2px solid rgba(142, 31, 26, .5);
   outline-offset: 2px;
 }
 
 /* 前三名：左侧竖条换成朱砂色，左边加一层极淡的朱砂晕 */
 .hot-card.is-top3::before { background: linear-gradient(180deg, var(--cinnabar-lt), var(--cinnabar)); }
-.hot-card.top-1 { background: linear-gradient(90deg, rgba(168, 50, 42, .07) 0%, var(--paper-card) 26%); }
-.hot-card.top-2 { background: linear-gradient(90deg, rgba(168, 50, 42, .05) 0%, var(--paper-card) 22%); }
-.hot-card.top-3 { background: linear-gradient(90deg, rgba(168, 50, 42, .035) 0%, var(--paper-card) 20%); }
+.hot-card.top-1 { background: linear-gradient(90deg, rgba(142, 31, 26, .07) 0%, var(--paper-card) 26%); }
+.hot-card.top-2 { background: linear-gradient(90deg, rgba(142, 31, 26, .05) 0%, var(--paper-card) 22%); }
+.hot-card.top-3 { background: linear-gradient(90deg, rgba(142, 31, 26, .035) 0%, var(--paper-card) 20%); }
 
-/* ---------- 排名：朱砂印章 ---------- */
+/* ---------- 排名：一枚墨点（前三名 = 朱砂点） ----------
+   ⭐ 做法：不是画一个"灰色圆底 + 数字"，
+      而是画【一滴墨】：实心偏黑的圆心 + 向外散开的淡晕。
+      数字用反白（白色）压在墨点上，像墨底上留出的字。 */
 .card-rank {
-  flex: 0 0 40px;
-  height: 40px;
+  position: relative;
+  flex: 0 0 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 600;
   letter-spacing: .5px;
-  color: var(--ink-mid);
-  background: rgba(43, 43, 47, .045);
-  border: 1px solid var(--border-ink);
-  border-radius: 2px;
+  color: #fff;                     /* 反白：白字压在墨上 */
+  border: none;
+  border-radius: 50%;
+  /* 墨点本体：中心浓黑 → 外缘淡 */
+  background:
+    radial-gradient(circle at 42% 38%,
+      rgba(10, 13, 17, .88) 0%,
+      rgba(10, 13, 17, .74) 46%,
+      rgba(10, 13, 17, .50) 74%,
+      rgba(10, 13, 17, .22) 100%);
+  box-shadow: 0 0 0 3px rgba(10, 13, 17, .05);   /* 外圈一层极淡的洇开 */
+  text-shadow: 0 1px 1px rgba(0, 0, 0, .3);
 }
 
-/* 前三名的序号 = 红印章 */
+/* 前三名 = 朱砂点（浓朱砂，白字） */
 .hot-card.is-top3 .card-rank {
-  color: var(--cinnabar);
-  background: rgba(168, 50, 42, .07);
-  border-color: rgba(168, 50, 42, .5);
-  font-weight: 500;
+  color: #fff;
+  background:
+    radial-gradient(circle at 42% 38%,
+      rgba(142, 31, 26, .94) 0%,
+      rgba(142, 31, 26, .82) 46%,
+      rgba(142, 31, 26, .58) 74%,
+      rgba(142, 31, 26, .26) 100%);
+  box-shadow: 0 0 0 3px rgba(142, 31, 26, .07);
 }
 
-/* ---------- 中间：标题 + 来源 + 热度 ---------- */
+/* ---------- 中间：标题 + 来源 + 热度 ----------
+   ⭐ 层次的关键就在这里：卡片内部也要有浓淡
+      标题 → 焦墨，最浓（视觉第一落点）
+      来源 → 石青小签，第二层
+      热度 → 淡墨，退到最后 */
 .card-body { flex: 1; min-width: 0; }
 
 .card-title {
   margin: 0 0 7px;
   font-size: 16.5px;
-  font-weight: 500;
+  /* 【层次】用 600 加粗 + 焦墨，让它从卡片里"跳"出来 */
+  font-weight: 600;
   letter-spacing: .6px;
-  color: var(--ink-strong);
+  color: var(--ink);
   line-height: 1.5;
-  /* 标题超长时用省略号，不撑破卡片 */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -430,9 +750,9 @@ body {
   letter-spacing: 1px;
   color: var(--azurite);
   padding: 2px 9px;
-  border: 1px solid rgba(61, 90, 117, .3);
+  border: 1px solid rgba(39, 67, 92, .3);
   border-radius: 2px;
-  background: rgba(61, 90, 117, .06);
+  background: rgba(39, 67, 92, .06);
 }
 
 /* 热度：淡墨小字，不抢眼 */
@@ -462,10 +782,16 @@ body {
    ============================================================ */
 .state-box {
   background: var(--paper-card);
-  border: 1px solid var(--border-ink);
+  border: none;
   border-radius: 3px;
   padding: 64px 24px;
   text-align: center;
+  /* 【晕染】和卡片同一套手法：极细墨线 + 向内洇墨 + 外圈渗出 */
+  box-shadow:
+    inset 0 0 0 1px rgba(10, 13, 17, .055),
+    inset 0 0 14px rgba(10, 13, 17, .05),
+    0 1px 3px  rgba(10, 13, 17, .06),
+    0 0 14px 2px rgba(10, 13, 17, .035);
 }
 
 /* 状态里用一个"墨字"当图标：空 / 误 —— 比 emoji 更贴合国风 */
@@ -479,14 +805,14 @@ body {
   font-size: 32px;
   font-weight: 500;
   color: var(--ink-light);
-  border: 1.5px solid rgba(43, 43, 47, .22);
+  border: 1.5px solid rgba(10, 13, 17, .30);
   border-radius: 3px;
   opacity: .85;
 }
 
 .is-error-glyph {
   color: var(--cinnabar);
-  border-color: rgba(168, 50, 42, .45);
+  border-color: rgba(142, 31, 26, .45);
 }
 
 .state-title {
@@ -504,21 +830,31 @@ body {
   color: var(--ink-light);
 }
 
-/* 加载中的转圈：改成"墨滴扩散"的呼吸感，比硬转圈更合国风 */
+/* 加载中的转圈：改成"墨滴扩散"的呼吸感，比硬转圈更合国风
+   ⚠️ 浓墨色调下，原来 2px 的细圈几乎看不见了 → 加粗到 2.5px、加深颜色 */
 .spinner {
   width: 38px;
   height: 38px;
   margin: 0 auto 20px;
-  border: 2px solid rgba(43, 43, 47, .12);
-  border-top-color: var(--ink-mid);
+  border: 2.5px solid rgba(10, 13, 17, .22);
+  border-top-color: var(--ink-deep);      /* 转动的那一截用浓墨，对比明显 */
   border-radius: 50%;
   animation: spin 1s linear infinite;
+  /* 外圈一点墨韵，像笔尖绕出来的 */
+  box-shadow: 0 0 8px 1px rgba(10, 13, 17, .06);
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
 /* 出错状态：朱砂色的边框与文字，一眼看出不对 */
-.state-box.is-error { border-color: rgba(168, 50, 42, .35); background: #fdf8f6; }
+.state-box.is-error {
+  /* 【晕染】出错时整块纸被朱砂染红一点，而不是画一圈红边 */
+  background: radial-gradient(ellipse 90% 80% at 50% 50%, rgba(142, 31, 26, .07), transparent 72%), var(--paper-card);
+  box-shadow:
+    inset 0 0 0 1px rgba(142, 31, 26, .22),
+    inset 0 0 22px rgba(142, 31, 26, .07),
+    0 0 16px 2px rgba(142, 31, 26, .04);
+}
 .state-box.is-error .state-title { color: var(--cinnabar); }
 
 /* 「重新加载」按钮：像一枚素印 */
@@ -530,7 +866,7 @@ body {
   letter-spacing: 3px;
   color: var(--cinnabar);
   background: transparent;
-  border: 1px solid rgba(168, 50, 42, .5);
+  border: 1px solid rgba(142, 31, 26, .5);
   border-radius: 2px;
   cursor: pointer;
   transition: background .2s, color .2s;
@@ -538,7 +874,7 @@ body {
 
 .retry-btn:hover {
   background: var(--cinnabar);
-  color: #fdf8f6;
+  color: #fafbfb;
 }
 
 /* ============================================================
@@ -547,8 +883,26 @@ body {
 .site-footer {
   margin-top: 36px;
   padding-top: 18px;
-  border-top: 1px solid var(--border-ink);
   text-align: center;
+  position: relative;
+}
+
+/* 【晕染】页脚不用 border-top（那是"一条数码线"），
+   改成一道两端虚化、中间有起伏的墨痕 —— 像随手划过去的一笔 */
+.site-footer::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+              transparent 0%,
+              rgba(10, 13, 17, .16) 14%,
+              rgba(10, 13, 17, .30) 48%,
+              rgba(10, 13, 17, .15) 82%,
+              transparent 100%);
+  filter: blur(.5px);
 }
 
 .site-footer p {
@@ -563,6 +917,9 @@ body {
    ============================================================ */
 @media (max-width: 560px) {
   .site-header { padding: 38px 22px 30px; }
+  /* ⚠️ 窄屏下墨团会被压得很扁（SVG 是"拉伸铺满"的），
+     所以干脆缩小它的影响范围：只留最左上一小团，不铺开 */
+  .header-ink { top: -10px; left: -10px; width: 62%; height: calc(100% + 22px); }
   .header-seal { width: 38px; top: 22px; right: 20px; font-size: 12px; padding: 5px 4px; }
   .site-title { font-size: 32px; letter-spacing: 5px; }
   .site-desc { font-size: 13.5px; }

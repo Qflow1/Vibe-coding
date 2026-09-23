@@ -38,11 +38,21 @@ const stateEls  = {
    ⚠️ 这两个开关只是为了让四种状态【看得见】。
       将来接上真后端，delay 删掉、failure 永远 false，
       下面的显示逻辑一个字都不用改。
-   ------------------------------------------------------------ */
-const DEBUG = {
-  delay: 600,       // 毫秒；设 0 就立刻显示
-  failure: false,   // 改成 true → 页面会走"出错了"这条路
-};
+
+   ⭐【Day 9 追加】支持用网址参数临时覆盖，方便调试时切换状态，
+      不用改代码、也不用重新提交：
+        · ?slow=8     → 把等待拉长到 8 秒（从容截"加载中"）
+        · ?fail=1     → 强制走"出错了"
+        · ?empty=1    → 强制走"没有内容"
+      正常情况下不带这些参数，就是 600 毫秒后正常出数据。 */
+const DEBUG = (function () {
+  const q = new URLSearchParams(location.search);
+  return {
+    delay:   q.has('slow')  ? Number(q.get('slow')) * 1000 : 600,
+    failure: q.get('fail')  === '1',
+    forceEmpty: q.get('empty') === '1',
+  };
+})();
 
 
 /* ------------------------------------------------------------
@@ -304,6 +314,11 @@ function loadData() {
   fetchHotList()
     .then(data => {
       allData = data;                              // 存一份备用
+      // 调试用：?empty=1 时假装一条都没匹配上（用来截"空状态"）
+      if (DEBUG.forceEmpty) {
+        showState('empty');
+        return;
+      }
       showState('list', sortByHeat(allData));      // ③ 成功 → 显示卡片列表
     })
     .catch(err => {

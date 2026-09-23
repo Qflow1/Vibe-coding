@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8"><title>Day6 截图专用 · 两条规则同框</title><style>
+body{font-family:"Microsoft YaHei",sans-serif;background:#f8fafc;color:#1e293b;
+     margin:0;padding:26px 30px;line-height:1.7;font-size:15px}
+.wrap{max-width:1180px;margin:0 auto}
+.top{background:#1e40af;color:#fff;border-radius:10px;padding:16px 24px;margin-bottom:20px}
+.top h1{margin:0;font-size:21px}
+.top p{margin:6px 0 0;font-size:14px;opacity:.9}
+.box{background:#fff;border-radius:10px;padding:18px 24px;margin-bottom:18px;
+     border:3px solid #f59e0b;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.box.green{border-color:#10b981}
+.tag{display:inline-block;background:#fef3c7;color:#92400e;font-weight:700;
+     font-size:13.5px;padding:4px 12px;border-radius:20px;margin-bottom:10px}
+.tag.g{background:#d1fae5;color:#065f46}
+h2{font-size:18.5px;color:#1e40af;margin:8px 0 6px;border-left:5px solid #2563eb;padding-left:10px}
+h3{font-size:16.5px;color:#0f766e;margin:14px 0 6px;border-left:4px solid #14b8a6;padding-left:10px}
+blockquote{background:#f1f5f9;border-left:4px solid #94a3b8;margin:6px 0;padding:8px 14px;
+           color:#475569;font-size:13.5px}
+.code{background:#0f172a;color:#e2e8f0;padding:12px 16px;border-radius:8px;
+      font-family:Consolas,monospace;font-size:13.5px;line-height:1.6;white-space:pre-wrap}
+.li{margin:3px 0;font-size:14.5px}
+.li.n{margin-left:12px}
+.sp{height:6px}
+p{margin:4px 0;font-size:14.5px}
+hr{border:none;border-top:1px solid #e2e8f0;margin:16px 0}
+.row{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid #eef2f7}
+.cell{flex:1;font-size:14px}
+.cell:first-child{flex:0 0 34px;text-align:center;font-weight:700;color:#2563eb}
+code{background:#f1f5f9;color:#be123c;padding:1px 6px;border-radius:4px;
+     font-family:Consolas,monospace;font-size:13px}
+b{color:#0f172a}
+</style></head><body><div class="wrap"><div class="top"><h1>Day 6 作业截图 · AGENTS.md 规则核对</h1><p>2026-09-23 ｜ 左框 = Day 1 原有规则（重点：第一章第 3 条「不提前做以后的天数」） ｜ 绿框 = 今日新追加的附 7 与附 8</p></div><div class="box"><span class="tag">① Day 1 原有规则 · 一字未改</span><h2>一、任务边界（最重要）</h2>
+<div class="sp"></div>
+<div class="li n">1. 收到我的任务清单后，<b>这份清单就是今天唯一的任务范围</b>，只做清单里写的事。</div>
+<div class="li n">2. 不做清单以外的工作：不建多余的文件、不写清单没提的功能、不顺手优化已有代码。你觉得可以改得更好，先跟我说一句，等我点头。</div>
+<div class="li n">3. 不提前做以后的天数。只有我把某天的清单发给你、并明确说「现在开始做 Day X」，才允许动那天。</div>
+<div class="li n">4. 拿不准是否在范围内，先问我，不要猜。</div>
+<div class="sp"></div></div><div class="box green"><span class="tag g">② 今日追加 · 附 7 + 附 8</span><h3>附 7. 改完必须报「未提交改动」（2026-09-23 追加，Day 6 起生效）</h3>
+<div class="sp"></div>
+<p><b>一句话</b>：只要动了文件，就要<b>主动</b>告诉子豪&quot;现在有几处改动还没提交&quot;，不用等他问。</p>
+<div class="sp"></div>
+<p><b>为什么加这条（防的是什么）</b>：</p>
+<div class="sp"></div>
+<div class="li">• 已经真实发生过两次：文件改了，但子豪没说「提交」，改动就<b>一直留在文件里、静静地未被记录</b>。等到下一轮一起提交时，<b>提交信息漏掉了上一轮的内容</b>（只能靠 <code>git commit --amend</code> 补救）。</div>
+<div class="li">• 关键认知：<b>&quot;改完了&quot; ≠ &quot;提交了&quot;</b> —— 改动只写在文件里，git 只有在你发话后才为它存档。<b>没有提交的改动，回退时会一起消失，也说不清它是哪次做的。</b></div>
+<div class="li">• 所以这条规则防的是：<b>改动被遗忘在文件里，最终丢失或说不清来源。</b></div>
+<div class="sp"></div>
+<p><b>具体怎么做（每次改完文件立刻执行）</b>：</p>
+<div class="sp"></div>
+<div class="li n">1. 用 <code>git status --short</code> 看一眼当前工作区，把<b>所有未提交的改动</b>（不只本轮新的）列出来。</div>
+<div class="li n">2. 主动在回复里加一行醒目提示，格式建议：</div>
+<div class="sp"></div>
+<p>   <code>`</code></p>
+<p>   ⚠️ 当前有 N 处改动尚未提交，等你确认后再提交打包</p>
+<p>   <code>`</code></p>
+<div class="sp"></div>
+<div class="li n">3. 如果<b>上一轮就有未提交的改动</b>，必须在这一行里一并写出来（写明是&quot;上一轮遗留&quot;），<b>不能只讲本轮新增的</b>。</div>
+<div class="li n">4. 列提交清单时，<b>把工作区里所有未提交改动全部列出</b>，逐个标明属于哪天的任务。</div>
+<div class="li n">5. 不允许&quot;攒改动&quot;：如果连续两轮都有改动，第一次改完就要提醒一次，不能等第二次才说。</div>
+<div class="sp"></div>
+<p><b>与第五章的分工</b>：</p>
+<div class="sp"></div>
+<div class="li">• 第五章第 1 条管的是「<b>提交时</b>：先列清单等我确认」</div>
+<div class="li">• 本附 7 管的是「<b>提交前</b>：任何时刻都要让我知道筐里有东西」</div>
+<div class="li">• 两条配合，确保&quot;未提交的改动&quot;永远在明面上。</div>
+<div class="sp"></div>
+<h3>附 8. 提交前必过清单 · 检查项版（2026-09-23 追加，Day 6 余力加练）</h3>
+<div class="sp"></div>
+<blockquote>附 7 是<b>叮嘱</b>（&quot;记得报备&quot;），附 8 是<b>验收表</b> —— 换成任何人（队友、以后接手的朋友、未来的自己）都能照着核一遍的写法：<b>每一条都有动作、有命令、有&quot;看到什么才算过&quot;</b>。</blockquote>
+<div class="sp"></div>
+<p><b>每次提交前，从上往下逐条打勾：</b></p>
+<div class="sp"></div>
+<div class="row"><div class="cell">#</div><div class="cell">检查动作（照做即可）</div><div class="cell">通过标准（看到什么才算过）</div><div class="cell">为什么这么做（它在防什么）</div></div>
+<div class="row"><div class="cell">1</div><div class="cell">跑 <code>git status --short</code></div><div class="cell"><b>输出为空</b> → 没有未提交改动，可以进入提交流程</div><div class="cell"><b>你不可能保护你不知道存在的东西。</b> 先看清&quot;筐里有什么&quot;，再决定做什么</div></div>
+<div class="row"><div class="cell">2</div><div class="cell">若第 1 步<b>有</b>输出：逐个看文件名</div><div class="cell">每一个输出行都<b>能说出&quot;它属于哪天的任务&quot;</b>；说不出的先问，不要提交</div><div class="cell">防&quot;<b>张冠李戴</b>&quot;：上一轮的遗留混进这一轮。说得出 = 心里有数；说不出 = 有东西脱离掌控</div></div>
+<div class="row"><div class="cell">3</div><div class="cell">跑 <code>git diff --stat</code></div><div class="cell">改动范围符合任务要求。任务写着&quot;只允许追加&quot;时，<b>deletions 必须为 0</b></div><div class="cell">防&quot;<b>手滑改多了</b>&quot;。数字不会撒谎 —— &quot;我保证没删&quot;是口头结论，<code>deletions: 0</code> 是硬证据</div></div>
+<div class="row"><div class="cell">4</div><div class="cell">写提交信息时，回头看<b>上一轮</b>有没有遗留改动</div><div class="cell">若有，<b>必须写进信息里</b>并标注&quot;（含上一轮遗留）&quot;</div><div class="cell">⭐ <b>唯一查&quot;记忆&quot;而非查文件的一条</b>：<code>git status</code> 看不出改动是哪一轮做的，这个信息只存在于对话里，必须由人来补</div></div>
+<div class="row"><div class="cell">5</div><div class="cell">提交后跑 <code>git log -1</code></div><div class="cell">标题以 <code>Day </code> 开头，正文能看到「改了什么：」「加了什么：」两行</div><div class="cell">防&quot;<b>格式写漏</b>&quot;。此刻<b>还来得及改</b>（未推送可 <code>--amend</code>）；推送后再发现就只能补发新提交</div></div>
+<div class="row"><div class="cell">6</div><div class="cell">推送后跑 <code>git ls-remote origin</code></div><div class="cell">云端 <code>refs/heads/main</code> 的哈希 <b>= 本地最新提交哈希</b></div><div class="cell">防&quot;<b>假推送</b>&quot;。本地说&quot;成功&quot;= 邮局说&quot;我收了&quot;；云端哈希对上 = 打电话问到&quot;那边真收到了&quot;</div></div>
+<div class="sp"></div>
+<p><b>这六条为什么按这个顺序</b>：</p>
+<div class="sp"></div>
+<pre class="code">
+提交前                 →   提交中            →   提交后
+① 看清筐里             ④ 补上记忆里的遗留   ⑤ 验信息格式
+② 逐个认领                                 ⑥ 验云端收货
+③ 看改了多少
+</pre>
+<div class="sp"></div>
+<div class="li">• <b>前三条查&quot;现状&quot;</b>（命令告诉你）</div>
+<div class="li">• <b>第四条补&quot;记忆&quot;</b>（只有人能补）</div>
+<div class="li">• <b>后两条验&quot;结果&quot;</b>（信息对不对 + 送到了没）</div>
+<div class="sp"></div>
+<p><b>用法说明</b>：</p>
+<div class="sp"></div>
+<div class="li">• 六条<b>按顺序</b>做，前一条不过就别进下一条。</div>
+<div class="li">• 第 1、2 条如果卡住，说明<b>有东西没归位</b> —— 这时先问我，不要擅自提交。</div>
+<div class="li">• 这份清单不只给 AI 用：<b>子豪自己提交、或将来跟队友协作时</b>，同一张表照样能核。</div>
+<div class="li">• 最要紧的其实是<b>第 3 条和第 6 条</b>（一个防手滑、一个防假推送）；其余四条偏&quot;确认心安&quot;，但&quot;确认心安&quot;不是浪费 —— 漏一次就要多花一次 <code>--amend</code> 的功夫。</div>
+<div class="sp"></div>
+<p><b>它和附 7 的关系</b>：附 7 管「<b>随时提醒</b>」（过程中），附 8 管「<b>提交前把关</b>」（终点前）。两条合起来，等于给&quot;改动会不会丢&quot;上了双保险。</p>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div>
+<div class="sp"></div></div></div></body></html>

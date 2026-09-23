@@ -4,17 +4,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>今日热搜 · 3 分钟看完今天全网在传什么</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
 
   <!-- ⓪ 左右两侧的国风装饰（只在宽屏显示，窄屏自动隐藏）
-       全部用 CSS + SVG 画，不加载任何图片 -->
+       全部用 CSS + SVG 画，不加载任何图片
+       元素从上到下均匀铺满整个侧边，不留大片空白 -->
   <aside class="side-deco side-left" aria-hidden="true">
-    <!-- 回纹边框：一条竖着的连续方折纹 -->
+    <!-- 回纹边框 -->
     <div class="deco-fret"></div>
 
-    <!-- 竹枝：竹节 + 两片竹叶 -->
+    <!-- 梅花枝：老枝 + 五瓣梅花 -->
+    <div class="deco-plum">
+      <svg viewBox="0 0 92 76" xmlns="http://www.w3.org/2000/svg">
+        <!-- 主枝：从右下往左上斜出 -->
+        <path d="M6 72 C22 62 30 48 34 32 C36 24 40 18 48 14"
+              fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- 两根侧枝 -->
+        <path d="M30 44 C40 40 50 42 58 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M40 22 C46 14 56 10 66 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <!-- 梅花（五瓣）：用五个小圆弧围成一朵 -->
+        <g stroke="currentColor" stroke-width="1.1" fill="none">
+          <!-- 花一 -->
+          <circle cx="48" cy="12" r="2.6"/>
+          <circle cx="53.2" cy="15.8" r="2.6"/>
+          <circle cx="51.2" cy="22" r="2.6"/>
+          <circle cx="44.8" cy="22" r="2.6"/>
+          <circle cx="42.8" cy="15.8" r="2.6"/>
+          <circle cx="48" cy="17" r="1.5" fill="currentColor"/>
+          <!-- 花二 -->
+          <circle cx="62" cy="44" r="2.3"/>
+          <circle cx="66.5" cy="47.4" r="2.3"/>
+          <circle cx="64.8" cy="52.8" r="2.3"/>
+          <circle cx="59.2" cy="52.8" r="2.3"/>
+          <circle cx="57.5" cy="47.4" r="2.3"/>
+          <circle cx="62" cy="48.5" r="1.3" fill="currentColor"/>
+          <!-- 花三（小） -->
+          <circle cx="26" cy="30" r="1.9"/>
+          <circle cx="29.6" cy="32.8" r="1.9"/>
+          <circle cx="28.2" cy="37.2" r="1.9"/>
+          <circle cx="23.8" cy="37.2" r="1.9"/>
+          <circle cx="22.4" cy="32.8" r="1.9"/>
+          <circle cx="26" cy="33.7" r="1.1" fill="currentColor"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 竹枝：竹节 + 竹叶 -->
     <div class="deco-bamboo">
       <svg viewBox="0 0 60 150" xmlns="http://www.w3.org/2000/svg">
         <line x1="30" y1="0" x2="30" y2="150" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
@@ -33,6 +70,32 @@
       <span>最</span><span>抚</span><span>凡</span><span>人</span><span>心</span>
     </div>
 
+    <!-- 太湖石：瘦皱漏透，带皴纹 -->
+    <div class="deco-rock">
+      <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- 外轮廓：一块立起来的石头，左窄右宽，顶部有起伏 -->
+        <path d="M40 8
+                 C44 18 42 26 38 32
+                 C48 30 56 34 58 44
+                 C68 42 78 48 80 58
+                 C82 68 74 74 64 74
+                 L24 74
+                 C14 74 8 68 10 58
+                 C12 48 20 40 30 40
+                 C30 28 34 16 40 8 Z"
+              fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <!-- 皴纹 -->
+        <g fill="none" stroke="currentColor" stroke-width=".9" opacity=".7" stroke-linecap="round">
+          <path d="M38 20 C35 36 34 56 36 73"/>
+          <path d="M52 32 C55 46 57 60 55 73"/>
+          <path d="M66 48 C68 58 68 66 66 73"/>
+          <path d="M22 46 C20 56 20 66 22 73"/>
+        </g>
+        <ellipse cx="44" cy="54" rx="4.5" ry="7" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M2 78 C30 75 70 75 98 77" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
+      </svg>
+    </div>
+
     <!-- 水波纹 -->
     <div class="deco-wave">
       <svg viewBox="0 0 90 24" xmlns="http://www.w3.org/2000/svg">
@@ -45,7 +108,27 @@
   <aside class="side-deco side-right" aria-hidden="true">
     <div class="deco-fret"></div>
 
-    <!-- 折扇：扇骨 + 扇面 -->
+    <!-- 兰花：飘逸的长叶 + 一茎一花 -->
+    <div class="deco-orchid">
+      <svg viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- 三片长叶：自左下根部向外散开，有弧度 -->
+        <path d="M12 76 C18 50 26 28 24 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M12 76 C28 58 44 44 72 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M12 76 C30 62 52 56 84 62" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- 花茎 -->
+        <path d="M16 70 C22 52 28 40 34 30" fill="none" stroke="currentColor" stroke-width="1" opacity=".8"/>
+        <!-- 兰花：外三瓣 + 内二瓣 + 蕊 -->
+        <g fill="none" stroke="currentColor" stroke-width="1.1">
+          <path d="M34 30 C28 24 26 16 30 12 C34 16 36 24 34 30 Z"/>
+          <path d="M34 30 C40 26 46 24 50 26 C46 30 40 32 34 30 Z"/>
+          <path d="M34 30 C32 36 30 42 26 44 C26 38 30 32 34 30 Z"/>
+          <path d="M34 30 C36 36 40 40 44 40 C42 34 38 30 34 30 Z"/>
+          <circle cx="34" cy="30" r="1.6" fill="currentColor"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 折扇 -->
     <div class="deco-fan">
       <svg viewBox="0 0 110 72" xmlns="http://www.w3.org/2000/svg">
         <path d="M55 66 L14 14 A52 52 0 0 1 96 14 Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
@@ -66,6 +149,24 @@
     <!-- 朱砂闲章 -->
     <div class="deco-seal">观</div>
 
+    <!-- 松枝：枝干 + 成簇的松针 -->
+    <div class="deco-pine">
+      <svg viewBox="0 0 100 74" xmlns="http://www.w3.org/2000/svg">
+        <!-- 主枝 -->
+        <path d="M4 62 C28 54 54 42 90 14"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <!-- 三簇松针：每簇从一点向外散开 -->
+        <g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".9">
+          <!-- 第一簇 -->
+          <path d="M34 52 L22 42 M34 52 L24 52 M34 52 L26 62 M34 52 L35 40 M34 52 L45 44"/>
+          <!-- 第二簇 -->
+          <path d="M58 38 L46 26 M58 38 L47 37 M58 38 L50 48 M58 38 L59 25 M58 38 L70 30"/>
+          <!-- 第三簇 -->
+          <path d="M82 22 L72 10 M82 22 L71 21 M82 22 L74 32 M82 22 L83 8 M82 22 L94 14"/>
+        </g>
+      </svg>
+    </div>
+
     <!-- 云纹 -->
     <div class="deco-cloud">
       <svg viewBox="0 0 90 44" xmlns="http://www.w3.org/2000/svg">
@@ -79,6 +180,94 @@
 
   <!-- ① 顶部区（水墨题头） -->
   <header class="site-header">
+    <!-- ⭐ 泼墨底：用 SVG 画两团"有形状的墨"贴在题头后面
+         为什么不用 CSS 渐变？——渐变永远是一块"圆的/椭圆的模糊色斑"，
+         而真墨落纸是一坨【形状不规则、边缘一鼓一鼓】的印子。
+         这里用三次贝塞尔曲线勾勒墨迹轮廓，才真的像"泼"上去的。
+
+         ⚠️ preserveAspectRatio 用默认值（不写 slice）！
+            第一版写了 "xMinYMin slice"，结果 SVG 按比例放大填满，
+            把墨团整个推到了可视区外面。现在让它【拉伸铺满】题头，
+            viewBox 的坐标就直接对应题头百分比，好控制得多。
+         ① 大墨团：左上角那一坨（每个 C 都是往外鼓一下再收回来）
+         ② 小墨点：右侧飞溅的一团 -->
+    <svg class="header-ink" viewBox="0 0 720 200" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <!-- 墨团的"浓淡"：中心实、外圈散 -->
+        <radialGradient id="inkBlob1" cx="34%" cy="40%" r="64%">
+          <stop offset="0%"   stop-color="#0a0d10" stop-opacity=".62"/>
+          <stop offset="30%"  stop-color="#0a0d10" stop-opacity=".50"/>
+          <stop offset="58%"  stop-color="#0a0d10" stop-opacity=".26"/>
+          <stop offset="82%"  stop-color="#0a0d10" stop-opacity=".09"/>
+          <stop offset="100%" stop-color="#0a0d10" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="inkBlob2" cx="45%" cy="45%" r="60%">
+          <stop offset="0%"   stop-color="#0a0d10" stop-opacity=".26"/>
+          <stop offset="55%"  stop-color="#0a0d10" stop-opacity=".12"/>
+          <stop offset="100%" stop-color="#0a0d10" stop-opacity="0"/>
+        </radialGradient>
+        <!-- 毛边：把墨团边缘揉毛，模拟纸纤维的阻力。
+             ⚠️ stdDeviation 从 6 调到 3：
+                6 太软，出来是一团"阴影"；
+                真墨是【主体实、只有边缘虚】，3 刚好。
+             ⭐ 再叠一个 feDisplacementMap：
+                用紊乱噪声把轮廓"推歪"一点，
+                边界就有了真墨那种细碎的毛刺感（不是光滑曲线）。 -->
+        <filter id="inkRough" x="-30%" y="-30%" width="160%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+          <feGaussianBlur in="displaced" stdDeviation="3"/>
+        </filter>
+        <!-- ⭐ 水痕边：真墨在宣纸上扩散时，最外圈会留下一道
+             【比中心淡、但比最外围更明显】的痕 —— 那是纸吸饱墨后
+             水分继续往外走、墨粒被滤在那一圈形成的。
+             这是"墨在纸上晕开"最像的一个细节，加上它就活了。 -->
+        <radialGradient id="inkHalo1" cx="34%" cy="40%" r="64%">
+          <stop offset="0%"   stop-color="#0a0d10" stop-opacity="0"/>
+          <stop offset="52%"  stop-color="#0a0d10" stop-opacity="0"/>
+          <stop offset="72%"  stop-color="#0a0d10" stop-opacity=".20"/>
+          <stop offset="86%"  stop-color="#0a0d10" stop-opacity=".11"/>
+          <stop offset="100%" stop-color="#0a0d10" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- ① 主墨团：轮廓一鼓一鼓的，不是标准椭圆
+           ⚠️ 尺寸收过一次：第一版铺满了整个题头左上，
+              看起来像"泼翻了"，很重。
+              真水墨讲【留白为主、墨为宾】，所以缩小到题头的一角。
+           ② 次墨团：右侧一小坨，和主墨拉开距离，破掉"独角戏" -->
+      <path filter="url(#inkRough)" fill="url(#inkBlob1)"
+            d="M4 2
+               C34 -4, 66 6, 84 22
+               C100 36, 110 48, 124 54
+               C142 62, 160 56, 174 64
+               C188 72, 186 86, 170 92
+               C150 100, 124 96, 104 101
+               C78 107, 58 118, 34 116
+               C12 114, -4 100, -8 76
+               C-13 52, -14 24, 4 2 Z"/>
+
+      <!-- ③ 水痕边：同一个轮廓再描一遍，只留下最外那圈痕 -->
+      <path filter="url(#inkRough)" fill="url(#inkHalo1)"
+            d="M4 2
+               C34 -4, 66 6, 84 22
+               C100 36, 110 48, 124 54
+               C142 62, 160 56, 174 64
+               C188 72, 186 86, 170 92
+               C150 100, 124 96, 104 101
+               C78 107, 58 118, 34 116
+               C12 114, -4 100, -8 76
+               C-13 52, -14 24, 4 2 Z"/>
+
+      <!-- ② 次墨团：右侧一小坨，和主墨拉开距离 -->
+      <path filter="url(#inkRough)" fill="url(#inkBlob2)"
+            d="M540 14
+               C572 4, 608 18, 622 42
+               C634 62, 626 84, 604 94
+               C578 106, 542 98, 528 78
+               C516 60, 520 30, 540 14 Z"/>
+    </svg>
+
     <p class="header-seal">热搜</p>
     <h1 class="site-title">今日热搜</h1>
     <p class="site-desc">三分钟，看尽今日人间</p>
@@ -134,7 +323,11 @@
   </footer>
 
   <!-- 加载顺序：先数据，后逻辑 -->
-  <script src="data.js"></script>
-  <script src="app.js"></script>
+  <!-- ⚠️ 调试技巧：给 js/css 的网址后面挂一个 ?v=xxx
+       浏览器只要看到网址变了，就会重新下载，不再用缓存。
+       这就是"改了代码但页面没变"时的解药。
+       正式上线前可以把这个 ?v= 删掉（或者每次发布换一个数字）。 -->
+  <script src="data.js?v=6"></script>
+  <script src="app.js?v=6"></script>
 </body>
 </html>
