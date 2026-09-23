@@ -61,6 +61,140 @@ body {
 }
 
 /* ============================================================
+   ⓪ 左右两侧的国风装饰（宽屏才显示）
+   ------------------------------------------------------------
+   做法：固定在视口两侧，用 calc(50% - ...) 把自己推到内容区外侧。
+   ⚠️ 内容区是 720px 居中，两侧各留 360px 起算。
+      屏幕不够宽时（装不下内容区 + 两侧装饰）自动隐藏，不会挤到内容。
+   ============================================================ */
+.side-deco {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  pointer-events: none;     /* 不挡鼠标，纯装饰 */
+  user-select: none;
+  color: var(--ink);        /* 子元素用 currentColor 继承墨色 */
+  z-index: 0;
+}
+
+/* 左列：贴在内容区左外侧（再往外推一点，留出呼吸感） */
+.side-left  { left:  calc(50% - 360px - 216px); }
+/* 右列：贴在内容区右外侧 */
+.side-right { right: calc(50% - 360px - 216px); }
+
+/* 两侧的竖排文字方向一致（都从上往下读） */
+.side-left, .side-right { text-orientation: upright; }
+
+/* ---------- 回纹：一道竖着的连续方折纹 ----------
+   回纹是中式最经典的边饰（连续方折、首尾相接）。
+   这里用 repeating-linear-gradient 打横齿 + 一条竖主线做出骨架感 */
+.deco-fret {
+  width: 30px;
+  height: 150px;
+  opacity: .55;
+  background-image:
+    /* 两条竖向主线，夹出中间的"回"字框 */
+    linear-gradient(90deg,
+      transparent 7px,  currentColor 7px,  currentColor 8px,  transparent 8px,
+      transparent 21px, currentColor 21px, currentColor 22px, transparent 22px),
+    /* 横齿：一节一节，形成方折感 */
+    repeating-linear-gradient(180deg,
+      transparent 0 8px,
+      currentColor 8px 10px,
+      transparent 10px 20px);
+  background-size: 30px 100%, 12px 20px;
+  background-position: 0 0, 9px 0;
+  background-repeat: no-repeat, repeat-y;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 15%, #000 85%, transparent);
+          mask-image: linear-gradient(180deg, transparent, #000 15%, #000 85%, transparent);
+}
+
+/* ---------- 竖排诗句 ---------- */
+.deco-verse {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  font-size: 18px;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: var(--ink-mid);
+  opacity: .52;
+}
+
+/* 诗句中间的朱砂小点，像句读 */
+.deco-dot {
+  width: 5px;
+  height: 5px;
+  margin: 12px 0;
+  border-radius: 50%;
+  background: var(--cinnabar);
+  opacity: .8;
+}
+
+/* ---------- 朱砂闲章 ---------- */
+.deco-seal {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--cinnabar);
+  border: 2px solid var(--cinnabar);
+  border-radius: 3px;
+  opacity: .40;
+  box-shadow: inset 0 0 0 1px rgba(168, 50, 42, .3);
+}
+
+/* ---------- 云纹 ---------- */
+.deco-cloud {
+  width: 76px;
+  color: var(--ink);
+  opacity: .28;
+}
+
+.deco-cloud svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 竹枝 ---------- */
+.deco-bamboo {
+  width: 36px;
+  color: var(--ink);
+  opacity: .24;
+}
+
+.deco-bamboo svg { width: 100%; height: auto; display: block; max-height: 104px; }
+
+/* ---------- 水波纹 ---------- */
+.deco-wave {
+  width: 88px;
+  color: var(--azurite);
+  opacity: .35;
+}
+
+.deco-wave svg { width: 100%; height: auto; display: block; }
+
+/* ---------- 折扇 ---------- */
+.deco-fan {
+  width: 100px;
+  color: var(--ink);
+  opacity: .30;
+}
+
+.deco-fan svg { width: 100%; height: auto; display: block; }
+
+/* ⚠️ 屏幕装不下时隐藏：内容 720 + 两侧各留 230 → 需要约 1200px */
+@media (max-width: 1240px) {
+  .side-deco { display: none; }
+}
+
+/* ============================================================
    ① 顶部区 —— 水墨晕染的题头
    ============================================================ */
 .site-header {
