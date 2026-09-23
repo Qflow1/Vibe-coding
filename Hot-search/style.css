@@ -3,21 +3,51 @@
    ------------------------------------------------------------
    它只管一件事：东西长什么样。
 
-   【Day 8 更新】
-     · 列表项从"连成一片"改成【独立卡片】—— 每条一张，有阴影、有间距
-     · 补齐四种状态的样式：加载中 / 有数据 / 空 / 出错
+   【Day 8 更新】列表改成独立卡片 + 补齐四种状态样式
+   【Day 9 更新】整体改成【水墨国风】
+     · 底色 = 宣纸的米白/浅灰（做旧纸纹）
+     · 文字 = 墨色（不是纯黑，是带蓝灰的"松烟墨"）
+     · 强调色 = 朱砂红（印章）+ 石青（点缀）
+     · 字体 = 优先宋体/楷体，横细竖粗，有笔锋感
+     · 装饰 = 顶部水墨晕染、卡片左侧毛笔竖条、印章式排名
    ============================================================ */
+
+/* ---------- 水墨配色（先定好，下面全部引用这几个变量） ----------
+   好处：以后想微调色调，只改这里几行，整站跟着变。 */
+:root {
+  --paper:        #f4f1e9;   /* 宣纸底色：偏暖的米白 */
+  --paper-deep:   #eae5d8;   /* 稍深一点的纸，用于分区 */
+  --paper-card:   #fbf9f4;   /* 卡片纸：比底色更亮，像新铺的一张纸 */
+  --ink:          #2b2b2f;   /* 松烟墨：正文字色，不是纯黑 */
+  --ink-strong:   #141417;   /* 浓墨：标题 */
+  --ink-mid:      #5a5a60;   /* 中墨：次要文字 */
+  --ink-light:    #8c8c93;   /* 淡墨：提示文字 */
+  --ink-wash:     rgba(43, 43, 47, .08);  /* 墨晕：用于阴影和分隔 */
+  --cinnabar:     #a8322a;   /* 朱砂：印章红，全站唯一的重色 */
+  --cinnabar-lt:  #c04a3f;   /* 浅朱砂：悬浮态 */
+  --azurite:      #3d5a75;   /* 石青：冷色点缀 */
+  --border-ink:   rgba(43, 43, 47, .14);  /* 墨线：作边框 */
+}
 
 /* ---------- 全局 ---------- */
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  padding: 0 0 40px;
-  font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", sans-serif;
-  background: #eef2f7;
-  color: #1e293b;
-  line-height: 1.6;
+  padding: 0 0 48px;
+  /* 宋体系列在前、楷体兜底 → 有书法味的横细竖粗 */
+  font-family: "Songti SC", "SimSun", "Noto Serif SC", "Source Han Serif SC",
+               "STKaiti", "KaiTi", Georgia, serif;
+  color: var(--ink);
+  line-height: 1.75;
+  /* 宣纸底：叠三层极淡的径向色斑，模拟纸张的云纹与陈旧感
+     （纯 CSS 画，不加载任何图片，双击打开也不会因为跨域失败） */
+  background-color: var(--paper);
+  background-image:
+    radial-gradient(ellipse 70% 50% at 12% 8%,  rgba(200, 190, 168, .30), transparent 60%),
+    radial-gradient(ellipse 60% 45% at 88% 22%, rgba(210, 202, 182, .26), transparent 62%),
+    radial-gradient(ellipse 80% 40% at 50% 96%, rgba(196, 186, 164, .22), transparent 65%);
+  background-attachment: fixed;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -30,80 +60,130 @@ body {
   margin-right: auto;
 }
 
-/* ---------- ① 顶部区 ---------- */
+/* ============================================================
+   ① 顶部区 —— 水墨晕染的题头
+   ============================================================ */
 .site-header {
-  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
-  color: #fff;
-  padding: 36px 28px 30px;
-  margin-bottom: 24px;
-  border-radius: 0 0 18px 18px;
-  box-shadow: 0 4px 18px rgba(30, 64, 175, .22);
+  position: relative;
+  padding: 52px 32px 40px;
+  margin-bottom: 30px;
+  overflow: hidden;
+  /* 宣纸上泼了一片淡墨：由深到浅，向右散开 */
+  background:
+    radial-gradient(ellipse 90% 130% at 18% 0%,   rgba(43, 43, 47, .13), transparent 62%),
+    radial-gradient(ellipse 70% 100% at 62% 8%,   rgba(61, 90, 117, .10), transparent 64%),
+    linear-gradient(160deg, var(--paper-deep) 0%, var(--paper) 70%);
+  border-bottom: 1px solid var(--border-ink);
+  border-radius: 0 0 4px 4px;
+}
+
+/* 题头左上的朱砂印章：一个方框 + 「热搜」二字 */
+.header-seal {
+  position: absolute;
+  top: 28px;
+  right: 32px;
+  margin: 0;
+  padding: 7px 6px;
+  width: 46px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: 0;
+  color: var(--cinnabar);
+  border: 2px solid var(--cinnabar);
+  border-radius: 3px;
+  opacity: .85;
+  box-shadow: inset 0 0 0 1px rgba(168, 50, 42, .28);
 }
 
 .site-title {
-  margin: 0 0 6px;
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  margin: 0 0 10px;
+  font-size: 42px;
+  font-weight: 500;
+  letter-spacing: 8px;         /* 字距拉开，像落款的疏朗 */
+  color: var(--ink-strong);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, .6);
 }
 
-.site-desc { margin: 0; font-size: 15px; opacity: .92; }
+.site-desc {
+  margin: 0;
+  font-size: 15px;
+  letter-spacing: 2px;
+  color: var(--ink-mid);
+}
 
-/* 示例数据声明：不能省 —— PRD §4.4 规定不许宣称"全网热度" */
 .site-note {
-  margin: 14px 0 0;
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, .16);
-  border-radius: 8px;
-  font-size: 13px;
-  display: inline-block;
+  margin: 18px 0 0;
+  font-size: 12.5px;
+  letter-spacing: .5px;
+  color: var(--ink-light);
+  padding-left: 12px;
+  /* 用左侧一道墨线代替图标，更素 */
+  border-left: 2px solid var(--border-ink);
 }
-.site-note b { color: #fde68a; }
 
-/* ---------- ② 筛选区 ---------- */
-.filter-area { padding: 0 20px; margin-bottom: 16px; }
+.site-note b { color: var(--ink-mid); font-weight: 500; }
+
+/* ============================================================
+   ② 筛选区 —— 像在纸上题字
+   ============================================================ */
+.filter-area { margin-bottom: 22px; padding: 0 2px; }
 
 .search-box { position: relative; display: flex; align-items: center; }
 
 .search-icon {
   position: absolute;
-  left: 16px;
-  font-size: 16px;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  letter-spacing: 1px;
+  line-height: 1;
+  color: var(--ink-light);
   pointer-events: none;
-  opacity: .55;
+  user-select: none;
+  /* 用一道细竖线把"检索"和输入区隔开，像书页的界栏 */
+  padding-right: 13px;
+  border-right: 1px solid var(--border-ink);
 }
 
 .search-input {
   width: 100%;
-  padding: 14px 18px 14px 44px;
-  font-size: 15.5px;
+  padding: 15px 18px 15px 76px;
   font-family: inherit;
-  color: #1e293b;
-  background: #fff;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
+  font-size: 15px;
+  letter-spacing: .5px;
+  color: var(--ink);
+  background: var(--paper-card);
+  border: 1px solid var(--border-ink);
+  border-radius: 3px;
   outline: none;
-  transition: border-color .18s, box-shadow .18s;
+  transition: border-color .2s, box-shadow .2s;
 }
 
-.search-input::placeholder { color: #94a3b8; }
+.search-input::placeholder { color: var(--ink-light); letter-spacing: 1px; }
 
 .search-input:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, .12);
+  border-color: rgba(168, 50, 42, .45);
+  box-shadow: 0 0 0 3px rgba(168, 50, 42, .08);
 }
 
 .filter-hint {
-  margin: 8px 2px 0;
+  margin: 10px 2px 0;
   font-size: 13px;
-  color: #64748b;
+  letter-spacing: 1px;
+  color: var(--ink-light);
   min-height: 20px;
 }
 
 /* ============================================================
-   ③ 卡片列表区（Day 8：改成明显的独立卡片）
+   ③ 卡片列表区
    ============================================================ */
-.list-area { padding: 0 20px; }
+.list-area { padding: 0 2px; }
 
 .hot-list {
   list-style: none;
@@ -111,184 +191,251 @@ body {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;                 /* 卡片之间的间距 —— 让它一眼就是"一张张卡" */
+  gap: 12px;
 }
 
-/* ⚠️ 必须补这一条！
+/* ⚠️ 必须保留这一条！
    原因：HTML 的 hidden 属性靠 display:none 生效，
         但上面给 .hot-list 显式写了 display:flex，会把它盖掉 ——
-        结果就是"藏了但还看得见"。
-   这条规则的意思是：带 hidden 属性的 .hot-list，一律不显示。
-   （其他状态框也同理，见文件末尾的统一处理） */
+        结果就是"藏了但还看得见"（错误状态和列表同时出现的那个 bug）。
+   这条规则的意思是：带 hidden 属性的元素，一律不显示。 */
 [hidden] { display: none !important; }
 
+/* ---------- 一张卡片：像贴在纸上的一条 ---------- */
 .hot-card {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px 18px;
-  background: #fff;
-  border: 1px solid #e8eef6;
-  border-radius: 14px;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+  gap: 18px;
+  padding: 15px 20px 15px 24px;
+  background: var(--paper-card);
+  border: 1px solid var(--border-ink);
+  border-radius: 3px;
   cursor: pointer;
-  transition: transform .16s, box-shadow .16s, border-color .16s;
+  transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+/* 左侧一道"毛笔竖条"——用渐变做出起笔重、收笔轻的感觉 */
+.hot-card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg,
+              rgba(43, 43, 47, .04) 0%,
+              rgba(43, 43, 47, .26) 30%,
+              rgba(43, 43, 47, .16) 100%);
+  border-radius: 2px 0 0 2px;
 }
 
 .hot-card:hover {
-  transform: translateY(-2px);                          /* 轻轻抬起 */
-  box-shadow: 0 8px 20px rgba(30, 64, 175, .13);
-  border-color: #bfdbfe;
+  transform: translateX(3px);          /* 像纸被轻轻推了一下 */
+  background: #fffefa;
+  box-shadow: 4px 6px 18px rgba(43, 43, 47, .10);
+  border-color: rgba(43, 43, 47, .22);
 }
 
 .hot-card:focus-visible {
-  outline: 3px solid #93c5fd;
+  outline: 2px solid rgba(168, 50, 42, .5);
   outline-offset: 2px;
 }
 
-/* 前三名卡片：左侧加一道彩色竖条 */
-.hot-card.is-top3 { border-left: 4px solid #e2e8f0; }
-.hot-card.top-1 { border-left-color: #dc2626; background: linear-gradient(90deg, #fff7f7 0%, #fff 22%); }
-.hot-card.top-2 { border-left-color: #ea580c; background: linear-gradient(90deg, #fff9f5 0%, #fff 22%); }
-.hot-card.top-3 { border-left-color: #ca8a04; background: linear-gradient(90deg, #fffdf5 0%, #fff 22%); }
+/* 前三名：左侧竖条换成朱砂色，左边加一层极淡的朱砂晕 */
+.hot-card.is-top3::before { background: linear-gradient(180deg, var(--cinnabar-lt), var(--cinnabar)); }
+.hot-card.top-1 { background: linear-gradient(90deg, rgba(168, 50, 42, .07) 0%, var(--paper-card) 26%); }
+.hot-card.top-2 { background: linear-gradient(90deg, rgba(168, 50, 42, .05) 0%, var(--paper-card) 22%); }
+.hot-card.top-3 { background: linear-gradient(90deg, rgba(168, 50, 42, .035) 0%, var(--paper-card) 20%); }
 
-/* 排名徽章 */
+/* ---------- 排名：朱砂印章 ---------- */
 .card-rank {
-  flex: 0 0 42px;
-  height: 42px;
+  flex: 0 0 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
-  font-weight: 800;
-  color: #64748b;
-  background: #f1f5f9;
-  border-radius: 10px;
-  font-variant-numeric: tabular-nums;
-  transition: background .16s, color .16s;
+  font-weight: 500;
+  letter-spacing: .5px;
+  color: var(--ink-mid);
+  background: rgba(43, 43, 47, .045);
+  border: 1px solid var(--border-ink);
+  border-radius: 2px;
 }
 
-.hot-card.top-1 .card-rank { background: #fee2e2; color: #b91c1c; }
-.hot-card.top-2 .card-rank { background: #ffedd5; color: #c2410c; }
-.hot-card.top-3 .card-rank { background: #fef3c7; color: #a16207; }
+/* 前三名的序号 = 红印章 */
+.hot-card.is-top3 .card-rank {
+  color: var(--cinnabar);
+  background: rgba(168, 50, 42, .07);
+  border-color: rgba(168, 50, 42, .5);
+  font-weight: 500;
+}
 
+/* ---------- 中间：标题 + 来源 + 热度 ---------- */
 .card-body { flex: 1; min-width: 0; }
 
 .card-title {
   margin: 0 0 7px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #1e293b;
+  font-size: 16.5px;
+  font-weight: 500;
+  letter-spacing: .6px;
+  color: var(--ink-strong);
+  line-height: 1.5;
+  /* 标题超长时用省略号，不撑破卡片 */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.hot-card:hover .card-title { color: #1d4ed8; }
+.card-meta { display: flex; align-items: center; gap: 9px; }
 
-/* 平台 + 热度 做成两个小标签 */
-.card-meta { display: flex; align-items: center; gap: 8px; }
-
+/* 来源平台：石青色的细边框小签 */
 .card-platform {
   font-size: 12px;
-  font-weight: 600;
-  color: #0369a1;
-  background: #e0f2fe;
+  letter-spacing: 1px;
+  color: var(--azurite);
   padding: 2px 9px;
-  border-radius: 20px;
+  border: 1px solid rgba(61, 90, 117, .3);
+  border-radius: 2px;
+  background: rgba(61, 90, 117, .06);
 }
 
+/* 热度：淡墨小字，不抢眼 */
 .card-heat {
-  font-size: 12.5px;
-  color: #b45309;
-  background: #fef3c7;
-  padding: 2px 9px;
-  border-radius: 20px;
-  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  letter-spacing: .8px;
+  color: var(--ink-light);
 }
 
+/* ---------- 右边：一个淡淡的箭头 ---------- */
 .card-arrow {
   flex: 0 0 auto;
-  font-size: 24px;
-  color: #cbd5e1;
-  transition: color .16s, transform .16s;
+  font-size: 20px;
+  color: var(--ink-light);
+  opacity: .5;
+  transition: transform .18s, opacity .18s, color .18s;
 }
 
-.hot-card:hover .card-arrow { color: #3b82f6; transform: translateX(4px); }
+.hot-card:hover .card-arrow {
+  transform: translateX(3px);
+  opacity: 1;
+  color: var(--cinnabar);
+}
 
 /* ============================================================
    ④ 三种"非列表"状态的通用样式
    ============================================================ */
 .state-box {
-  background: #fff;
-  border: 1px solid #e8eef6;
-  border-radius: 14px;
-  padding: 56px 24px;
+  background: var(--paper-card);
+  border: 1px solid var(--border-ink);
+  border-radius: 3px;
+  padding: 64px 24px;
   text-align: center;
-  box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
 }
 
-.state-icon { margin: 0 0 12px; font-size: 42px; opacity: .45; line-height: 1; }
+/* 状态里用一个"墨字"当图标：空 / 误 —— 比 emoji 更贴合国风 */
+.state-glyph {
+  width: 62px;
+  height: 62px;
+  margin: 0 auto 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 500;
+  color: var(--ink-light);
+  border: 1.5px solid rgba(43, 43, 47, .22);
+  border-radius: 3px;
+  opacity: .85;
+}
+
+.is-error-glyph {
+  color: var(--cinnabar);
+  border-color: rgba(168, 50, 42, .45);
+}
 
 .state-title {
-  margin: 0 0 6px;
+  margin: 0 0 8px;
   font-size: 17px;
-  font-weight: 600;
-  color: #475569;
+  font-weight: 500;
+  letter-spacing: 2px;
+  color: var(--ink-mid);
 }
 
-.state-sub { margin: 0; font-size: 14px; color: #94a3b8; word-break: break-all; }
+.state-sub {
+  margin: 0;
+  font-size: 13px;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+}
 
-/* 加载中的转圈 */
+/* 加载中的转圈：改成"墨滴扩散"的呼吸感，比硬转圈更合国风 */
 .spinner {
   width: 38px;
   height: 38px;
-  margin: 0 auto 16px;
-  border: 4px solid #e2e8f0;
-  border-top-color: #3b82f6;
+  margin: 0 auto 20px;
+  border: 2px solid rgba(43, 43, 47, .12);
+  border-top-color: var(--ink-mid);
   border-radius: 50%;
-  animation: spin .8s linear infinite;
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* 出错状态：换个颜色，让人一眼看出"这是出问题了" */
-.state-box.is-error { border-color: #fecaca; background: #fffbfb; }
-.state-box.is-error .state-icon { opacity: .7; }
-.state-box.is-error .state-title { color: #b91c1c; }
+/* 出错状态：朱砂色的边框与文字，一眼看出不对 */
+.state-box.is-error { border-color: rgba(168, 50, 42, .35); background: #fdf8f6; }
+.state-box.is-error .state-title { color: var(--cinnabar); }
 
+/* 「重新加载」按钮：像一枚素印 */
 .retry-btn {
-  margin-top: 18px;
-  padding: 9px 24px;
-  font-size: 14.5px;
-  font-family: inherit;
-  font-weight: 600;
-  color: #fff;
-  background: #dc2626;
-  border: none;
-  border-radius: 9px;
-  cursor: pointer;
-  transition: background .16s, transform .1s;
-}
-
-.retry-btn:hover { background: #b91c1c; }
-.retry-btn:active { transform: scale(.97); }
-
-/* ---------- 页脚 ---------- */
-.site-footer {
   margin-top: 22px;
-  padding: 0 20px;
-  text-align: center;
-  font-size: 13px;
-  color: #94a3b8;
+  padding: 10px 30px;
+  font-family: inherit;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--cinnabar);
+  background: transparent;
+  border: 1px solid rgba(168, 50, 42, .5);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: background .2s, color .2s;
 }
 
-/* ---------- 小屏适配 ---------- */
-@media (max-width: 480px) {
-  .site-title { font-size: 26px; }
-  .site-header { padding: 28px 20px 24px; }
-  .hot-card { padding: 14px; gap: 12px; }
-  .card-rank { flex: 0 0 36px; height: 36px; font-size: 14px; }
+.retry-btn:hover {
+  background: var(--cinnabar);
+  color: #fdf8f6;
+}
+
+/* ============================================================
+   ⑤ 页脚
+   ============================================================ */
+.site-footer {
+  margin-top: 36px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-ink);
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+  font-size: 12.5px;
+  letter-spacing: 1.5px;
+  color: var(--ink-light);
+}
+
+/* ============================================================
+   ⑥ 窄屏适配（手机）
+   ============================================================ */
+@media (max-width: 560px) {
+  .site-header { padding: 38px 22px 30px; }
+  .header-seal { width: 38px; top: 22px; right: 20px; font-size: 12px; padding: 5px 4px; }
+  .site-title { font-size: 32px; letter-spacing: 5px; }
+  .site-desc { font-size: 13.5px; }
+  .hot-card { gap: 13px; padding: 14px 15px 14px 17px; }
+  .card-rank { flex: 0 0 34px; height: 34px; font-size: 14px; }
   .card-title { font-size: 15px; }
-  .state-box { padding: 44px 18px; }
+  .state-box { padding: 48px 18px; }
+  .search-input { padding-left: 58px; }
+  .filter-area, .list-area { padding: 0 14px; }
 }

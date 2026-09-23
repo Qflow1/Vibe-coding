@@ -139,7 +139,8 @@ function createHotCard(item, index) {
 
   const heat = document.createElement('span');
   heat.className = 'card-heat';
-  heat.textContent = '🔥 ' + formatHeat(item.heat);
+  // 【Day 9】原来是 '🔥 ' + 数值，改成国风的「热度」二字前缀
+  heat.textContent = '热度 ' + formatHeat(item.heat);
 
   meta.appendChild(platform);
   meta.appendChild(heat);

@@ -8,17 +8,18 @@
 </head>
 <body>
 
-  <!-- ① 顶部区 -->
+  <!-- ① 顶部区（水墨题头） -->
   <header class="site-header">
+    <p class="header-seal">热搜</p>
     <h1 class="site-title">今日热搜</h1>
-    <p class="site-desc">3 分钟看完今天全网在传什么</p>
-    <p class="site-note">⚠️ 当前为<b>示例数据</b>，用于演示页面效果，非真实平台数据</p>
+    <p class="site-desc">三分钟，看尽今日人间</p>
+    <p class="site-note">当前为<b>示例数据</b>，用于演示页面效果，非真实平台数据</p>
   </header>
 
   <!-- ② 筛选区 -->
   <section class="filter-area">
     <div class="search-box">
-      <span class="search-icon">🔍</span>
+      <span class="search-icon">检索</span>
       <input
         type="text"
         id="keywordInput"
@@ -38,19 +39,20 @@
     <!-- 状态二：加载中 -->
     <div class="state-box" id="stateLoading" hidden>
       <div class="spinner"></div>
-      <p class="state-title">正在加载热点…</p>
+      <p class="state-title">正在展卷</p>
+      <p class="state-sub">正在取回今日热点…</p>
     </div>
 
     <!-- 状态三：没有内容（筛选无结果） -->
     <div class="state-box" id="stateEmpty" hidden>
-      <p class="state-icon">🔍</p>
+      <p class="state-glyph">空</p>
       <p class="state-title">没有找到相关内容</p>
       <p class="state-sub">换个关键词试试</p>
     </div>
 
     <!-- 状态四：出错了 -->
     <div class="state-box is-error" id="stateError" hidden>
-      <p class="state-icon">⚠️</p>
+      <p class="state-glyph is-error-glyph">误</p>
       <p class="state-title">内容加载失败</p>
       <p class="state-sub" id="errorDetail"></p>
       <button class="retry-btn" id="retryBtn" type="button">重新加载</button>
@@ -59,7 +61,7 @@
   </main>
 
   <footer class="site-footer">
-    <p>共 30 条示例数据 ｜ 点击任意条目会在新窗口打开搜索结果</p>
+    <p>共 30 条示例数据 · 点击任意条目，在新窗口打开搜索结果</p>
   </footer>
 
   <!-- 加载顺序：先数据，后逻辑 -->
