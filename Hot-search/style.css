@@ -2,7 +2,10 @@
    今日热搜网站 · 样式文件（style.css）
    ------------------------------------------------------------
    它只管一件事：东西长什么样。
-   配色思路：深色标题区 + 浅色内容区，干净、信息密度高。
+
+   【Day 8 更新】
+     · 列表项从"连成一片"改成【独立卡片】—— 每条一张，有阴影、有间距
+     · 补齐四种状态的样式：加载中 / 有数据 / 空 / 出错
    ============================================================ */
 
 /* ---------- 全局 ---------- */
@@ -12,13 +15,12 @@ body {
   margin: 0;
   padding: 0 0 40px;
   font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", sans-serif;
-  background: #f1f5f9;
+  background: #eef2f7;
   color: #1e293b;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-/* 把整页内容限制在中间一列，太宽了不好读 */
 .site-header,
 .filter-area,
 .list-area,
@@ -33,10 +35,9 @@ body {
   background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
   color: #fff;
   padding: 36px 28px 30px;
-  margin-top: 0;
   margin-bottom: 24px;
   border-radius: 0 0 18px 18px;
-  box-shadow: 0 4px 16px rgba(30, 64, 175, .18);
+  box-shadow: 0 4px 18px rgba(30, 64, 175, .22);
 }
 
 .site-title {
@@ -46,11 +47,7 @@ body {
   letter-spacing: 1px;
 }
 
-.site-desc {
-  margin: 0;
-  font-size: 15px;
-  opacity: .92;
-}
+.site-desc { margin: 0; font-size: 15px; opacity: .92; }
 
 /* 示例数据声明：不能省 —— PRD §4.4 规定不许宣称"全网热度" */
 .site-note {
@@ -64,19 +61,15 @@ body {
 .site-note b { color: #fde68a; }
 
 /* ---------- ② 筛选区 ---------- */
-.filter-area { padding: 0 20px; margin-bottom: 18px; }
+.filter-area { padding: 0 20px; margin-bottom: 16px; }
 
-.search-box {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
+.search-box { position: relative; display: flex; align-items: center; }
 
 .search-icon {
   position: absolute;
   left: 16px;
   font-size: 16px;
-  pointer-events: none;   /* 装饰用，别挡住点击 */
+  pointer-events: none;
   opacity: .55;
 }
 
@@ -107,95 +100,179 @@ body {
   min-height: 20px;
 }
 
-/* ---------- ③ 列表区 ---------- */
+/* ============================================================
+   ③ 卡片列表区（Day 8：改成明显的独立卡片）
+   ============================================================ */
 .list-area { padding: 0 20px; }
 
 .hot-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  background: #fff;
-  border-radius: 14px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, .07);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;                 /* 卡片之间的间距 —— 让它一眼就是"一张张卡" */
 }
 
-.hot-item {
+/* ⚠️ 必须补这一条！
+   原因：HTML 的 hidden 属性靠 display:none 生效，
+        但上面给 .hot-list 显式写了 display:flex，会把它盖掉 ——
+        结果就是"藏了但还看得见"。
+   这条规则的意思是：带 hidden 属性的 .hot-list，一律不显示。
+   （其他状态框也同理，见文件末尾的统一处理） */
+[hidden] { display: none !important; }
+
+.hot-card {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 15px 18px;
-  border-bottom: 1px solid #f1f5f9;
-  cursor: pointer;               /* 鼠标变小手，暗示可点 */
-  transition: background .15s;
+  gap: 16px;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid #e8eef6;
+  border-radius: 14px;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
+  cursor: pointer;
+  transition: transform .16s, box-shadow .16s, border-color .16s;
 }
 
-.hot-item:last-child { border-bottom: none; }
-.hot-item:hover { background: #f8fafc; }
-
-/* 排名数字 */
-.item-rank {
-  flex: 0 0 30px;
-  font-size: 15px;
-  font-weight: 700;
-  color: #94a3b8;
-  font-variant-numeric: tabular-nums;   /* 数字等宽，对齐好看 */
+.hot-card:hover {
+  transform: translateY(-2px);                          /* 轻轻抬起 */
+  box-shadow: 0 8px 20px rgba(30, 64, 175, .13);
+  border-color: #bfdbfe;
 }
 
-/* 前三名加颜色 */
-.item-rank.top-1 { color: #dc2626; }
-.item-rank.top-2 { color: #ea580c; }
-.item-rank.top-3 { color: #ca8a04; }
+.hot-card:focus-visible {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
 
-.item-main { flex: 1; min-width: 0; }   /* min-width:0 让长标题能正常省略 */
+/* 前三名卡片：左侧加一道彩色竖条 */
+.hot-card.is-top3 { border-left: 4px solid #e2e8f0; }
+.hot-card.top-1 { border-left-color: #dc2626; background: linear-gradient(90deg, #fff7f7 0%, #fff 22%); }
+.hot-card.top-2 { border-left-color: #ea580c; background: linear-gradient(90deg, #fff9f5 0%, #fff 22%); }
+.hot-card.top-3 { border-left-color: #ca8a04; background: linear-gradient(90deg, #fffdf5 0%, #fff 22%); }
 
-.item-title {
-  margin: 0 0 3px;
-  font-size: 15.5px;
-  font-weight: 500;
+/* 排名徽章 */
+.card-rank {
+  flex: 0 0 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 800;
+  color: #64748b;
+  background: #f1f5f9;
+  border-radius: 10px;
+  font-variant-numeric: tabular-nums;
+  transition: background .16s, color .16s;
+}
+
+.hot-card.top-1 .card-rank { background: #fee2e2; color: #b91c1c; }
+.hot-card.top-2 .card-rank { background: #ffedd5; color: #c2410c; }
+.hot-card.top-3 .card-rank { background: #fef3c7; color: #a16207; }
+
+.card-body { flex: 1; min-width: 0; }
+
+.card-title {
+  margin: 0 0 7px;
+  font-size: 16px;
+  font-weight: 600;
   color: #1e293b;
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap;      /* 标题太长就省略号，不换行（保证一行一条好扫） */
+  white-space: nowrap;
 }
 
-.item-meta {
-  margin: 0;
-  font-size: 13px;
-  color: #64748b;
+.hot-card:hover .card-title { color: #1d4ed8; }
+
+/* 平台 + 热度 做成两个小标签 */
+.card-meta { display: flex; align-items: center; gap: 8px; }
+
+.card-platform {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0369a1;
+  background: #e0f2fe;
+  padding: 2px 9px;
+  border-radius: 20px;
 }
 
-.item-arrow {
+.card-heat {
+  font-size: 12.5px;
+  color: #b45309;
+  background: #fef3c7;
+  padding: 2px 9px;
+  border-radius: 20px;
+  font-variant-numeric: tabular-nums;
+}
+
+.card-arrow {
   flex: 0 0 auto;
-  font-size: 22px;
+  font-size: 24px;
   color: #cbd5e1;
-  transition: color .15s, transform .15s;
+  transition: color .16s, transform .16s;
 }
 
-.hot-item:hover .item-arrow {
-  color: #3b82f6;
-  transform: translateX(3px);
-}
+.hot-card:hover .card-arrow { color: #3b82f6; transform: translateX(4px); }
 
-/* ---------- ④ 空状态 ---------- */
-.empty-state {
+/* ============================================================
+   ④ 三种"非列表"状态的通用样式
+   ============================================================ */
+.state-box {
   background: #fff;
+  border: 1px solid #e8eef6;
   border-radius: 14px;
   padding: 56px 24px;
   text-align: center;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, .07);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, .06);
 }
 
-.empty-icon { margin: 0 0 12px; font-size: 40px; opacity: .4; }
+.state-icon { margin: 0 0 12px; font-size: 42px; opacity: .45; line-height: 1; }
 
-.empty-text {
+.state-title {
   margin: 0 0 6px;
   font-size: 17px;
   font-weight: 600;
   color: #475569;
 }
 
-.empty-sub { margin: 0; font-size: 14px; color: #94a3b8; }
+.state-sub { margin: 0; font-size: 14px; color: #94a3b8; word-break: break-all; }
+
+/* 加载中的转圈 */
+.spinner {
+  width: 38px;
+  height: 38px;
+  margin: 0 auto 16px;
+  border: 4px solid #e2e8f0;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* 出错状态：换个颜色，让人一眼看出"这是出问题了" */
+.state-box.is-error { border-color: #fecaca; background: #fffbfb; }
+.state-box.is-error .state-icon { opacity: .7; }
+.state-box.is-error .state-title { color: #b91c1c; }
+
+.retry-btn {
+  margin-top: 18px;
+  padding: 9px 24px;
+  font-size: 14.5px;
+  font-family: inherit;
+  font-weight: 600;
+  color: #fff;
+  background: #dc2626;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: background .16s, transform .1s;
+}
+
+.retry-btn:hover { background: #b91c1c; }
+.retry-btn:active { transform: scale(.97); }
 
 /* ---------- 页脚 ---------- */
 .site-footer {
@@ -206,10 +283,12 @@ body {
   color: #94a3b8;
 }
 
-/* ---------- 小屏适配（手机上也好用） ---------- */
+/* ---------- 小屏适配 ---------- */
 @media (max-width: 480px) {
   .site-title { font-size: 26px; }
   .site-header { padding: 28px 20px 24px; }
-  .hot-item { padding: 13px 14px; gap: 10px; }
-  .item-title { font-size: 15px; }
+  .hot-card { padding: 14px; gap: 12px; }
+  .card-rank { flex: 0 0 36px; height: 36px; font-size: 14px; }
+  .card-title { font-size: 15px; }
+  .state-box { padding: 44px 18px; }
 }

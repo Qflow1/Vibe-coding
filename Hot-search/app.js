@@ -1,136 +1,229 @@
 /* ============================================================
    今日热搜网站 · 逻辑文件（app.js）
    ------------------------------------------------------------
-   它负责四件事：
-     1. 拿到数据
+   它负责这几件事：
+     1. 拿到数据（现在是本地文件，将来是服务器）
      2. 按热度值排序、算出排名
-     3. 渲染成页面上的列表
+     3. 渲染成页面上的卡片列表
      4. 响应用户输入的关键词做筛选
+     5. 管理四种页面状态：加载中 / 有数据 / 空 / 出错
 
-   ⚠️ 本文件里【取数只写在一个地方】（见下面的 getAllData 函数）。
-      将来数据源从"本地文件"换成"服务器接口"，只需要改那一个函数，
-      下面的排序、渲染、筛选逻辑一行都不用动。
+   ⚠️ 本文件里【取数只写在一个地方】（见下面的 fetchHotList 函数）。
+      将来数据源从"本地文件"换成"服务器接口"，只需要改那一个函数。
+
+   【Day 8 更新】取数改成了"异步"（fetchHotList 返回 Promise）。
+      这样做的原因：真实后端要发网络请求、要等待、可能失败。
+      现在就把结构摆成这样，将来接后端时其余逻辑一行都不用改。
    ============================================================ */
 
 
 /* ------------------------------------------------------------
-   第 0 步：拿到页面上的元素，存起来备用
-   ------------------------------------------------------------
-   document.getElementById('xxx') 的意思是：
-     "去页面里找到 id 叫 xxx 的那个元素"。
-   找到之后存进变量，后面反复用，不用每次都去找一遍。
+   第 0 步：页面元素 + 运行设置
    ------------------------------------------------------------ */
-const listEl  = document.getElementById('hotList');    // 列表容器（ol）
-const inputEl = document.getElementById('keywordInput'); // 输入框
-const emptyEl = document.getElementById('emptyState');   // 空状态提示
-const hintEl  = document.getElementById('filterHint');   // 筛选结果提示
+const listEl    = document.getElementById('hotList');     // 列表容器
+const inputEl   = document.getElementById('keywordInput'); // 输入框
+const hintEl    = document.getElementById('filterHint');   // 顶部提示文字
+const retryBtn  = document.getElementById('retryBtn');     // "重新加载"按钮
+const stateEls  = {
+  loading: document.getElementById('stateLoading'),  // 加载中
+  empty:   document.getElementById('stateEmpty'),    // 没有内容
+  error:   document.getElementById('stateError'),    // 出错了
+};
+
+/* ---------- 开发用开关（接真实后端后可以删掉） ----------
+   simulate 用来在【没有后端】的情况下，模拟真实网络的样子：
+     delay   —— 假装请求要花 600 毫秒（这样才看得到"加载中"）
+     failure —— 设成 true，就假装请求失败了（这样才看得到"出错了"）
+
+   ⚠️ 这两个开关只是为了让四种状态【看得见】。
+      将来接上真后端，delay 删掉、failure 永远 false，
+      下面的显示逻辑一个字都不用改。
+   ------------------------------------------------------------ */
+const DEBUG = {
+  delay: 600,       // 毫秒；设 0 就立刻显示
+  failure: false,   // 改成 true → 页面会走"出错了"这条路
+};
 
 
 /* ------------------------------------------------------------
    ★ 唯一取数口：所有需要数据的地方，都从这里拿
    ------------------------------------------------------------
    现在：从 data.js 里的 HOT_LIST 拿（就是那 30 条）。
-   将来：改成向服务器要数据，只动这个函数内部的写法。
+   将来：改成 fetch('/api/hot') 之类的真实请求，只动这个函数内部。
+
+   ⚠️ 它返回的是 Promise（"将来才会有结果"的意思）。
+      这样写的好处：真实网络请求本来就是异步的，现在结构一致，
+      将来把 setTimeout 换成 fetch，外面所有调用都不用改。
    ------------------------------------------------------------ */
-function getAllData() {
-  return HOT_LIST;
+function fetchHotList() {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (DEBUG.failure) {
+        // 假装"请求失败了" —— 用来演示错误状态
+        reject(new Error('模拟的请求失败（DEBUG.failure = true）'));
+        return;
+      }
+      if (typeof HOT_LIST === 'undefined') {
+        // 真实可能发生的情况：数据文件没加载上 / 字段名被改坏了
+        reject(new Error('数据不可用：没有找到 HOT_LIST'));
+        return;
+      }
+      resolve(HOT_LIST);
+    }, DEBUG.delay);
+  });
 }
 
 
 /* ------------------------------------------------------------
    第 1 步：排序 + 算排名
    ------------------------------------------------------------
-   规则（来自 PRD.md §4.2）：
-     · 按 heat（热度值）从高到低排
-     · 排名不是数据里存的，是这里【算出来】的
-     · 筛选之后要重新编号，所以这个函数会被反复调用
+   · 按 heat（热度值）从高到低排
+   · 排名不是数据里存的，是算出来的
+   · 筛选之后要重新编号，所以会被反复调用
    ------------------------------------------------------------ */
 function sortByHeat(list) {
-  // slice() 是"复制一份再排"，避免把原数组也弄乱了
-  // sort() 里的 (a, b) => b.heat - a.heat 意思是：大的排前面
+  // slice() 先复制一份再排，避免把原数组弄乱
   return list.slice().sort((a, b) => b.heat - a.heat);
 }
 
 
 /* ------------------------------------------------------------
-   第 2 步：把一条数据变成页面上的一个列表项（DOM 元素）
+   ★ 第 2 步：可复用的组件 —— 一张卡片
    ------------------------------------------------------------
-   小知识：把数字变成两位数（1 → "01"），用 padStart(2, '0')
-     —— "1".padStart(2, "0") 结果是 "01"
+   这就是 Day 8 的"余力加练"：把一条数据变成一个卡片元素，
+   单独拿出来做成一个函数。
+
+   好处：将来别的页面（比如"收藏列表""搜索历史"）要用同样的卡片，
+         直接调这个函数就行，不用重写一遍。
+
+   参数：
+     item  —— 一条数据 { title, platform, heat }
+     index —— 它在当前列表里的位置（从 0 开始，用来算排名）
    ------------------------------------------------------------ */
-function createItemEl(item, index) {
-  const li = document.createElement('li');
-  li.className = 'hot-item';
-  // 点击时跳去百度搜索这条标题（见第 5 步）
-  li.addEventListener('click', () => openSearch(item.title));
+function createHotCard(item, index) {
+  const rankNo = index + 1;                       // 排名从 1 开始
+  const isTop3 = rankNo <= 3;                     // 前三名要特殊照顾
 
-  // 排名
-  const rank = document.createElement('span');
-  rank.className = 'item-rank';
-  rank.textContent = String(index + 1).padStart(2, '0');
-  // 前三名加个特殊样式（gold / silver / bronze）
-  if (index < 3) rank.classList.add('top-' + (index + 1));
+  const card = document.createElement('li');
+  card.className = 'hot-card';
+  if (isTop3) card.classList.add('is-top3', 'top-' + rankNo);
+  card.addEventListener('click', () => openSearch(item.title));
+  // 键盘也能操作（无障碍）—— 回车或空格等于点击
+  card.tabIndex = 0;
+  card.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      openSearch(item.title);
+    }
+  });
 
-  // 中间：标题 + 来源平台
-  const main = document.createElement('div');
-  main.className = 'item-main';
+  // ── 左边：排名徽章 ──
+  const badge = document.createElement('div');
+  badge.className = 'card-rank';
+  badge.textContent = String(rankNo).padStart(2, '0');
 
-  const title = document.createElement('p');
-  title.className = 'item-title';
-  title.textContent = item.title;   // 用 textContent 而不是 innerHTML，避免标题里的特殊符号搞乱页面
+  // ── 中间：标题 + 平台 + 热度 ──
+  const body = document.createElement('div');
+  body.className = 'card-body';
 
-  const meta = document.createElement('p');
-  meta.className = 'item-meta';
-  meta.textContent = item.platform + ' · 热度 ' + formatHeat(item.heat);
+  const title = document.createElement('h3');
+  title.className = 'card-title';
+  title.textContent = item.title;   // 用 textContent 不用 innerHTML，避免标题里的符号搞乱页面
 
-  main.appendChild(title);
-  main.appendChild(meta);
+  const meta = document.createElement('div');
+  meta.className = 'card-meta';
 
-  // 右侧：一个箭头，暗示"可以点"
-  const arrow = document.createElement('span');
-  arrow.className = 'item-arrow';
+  const platform = document.createElement('span');
+  platform.className = 'card-platform';
+  platform.textContent = item.platform;
+
+  const heat = document.createElement('span');
+  heat.className = 'card-heat';
+  heat.textContent = '🔥 ' + formatHeat(item.heat);
+
+  meta.appendChild(platform);
+  meta.appendChild(heat);
+
+  body.appendChild(title);
+  body.appendChild(meta);
+
+  // ── 右边：箭头 ──
+  const arrow = document.createElement('div');
+  arrow.className = 'card-arrow';
   arrow.textContent = '›';
 
-  li.appendChild(rank);
-  li.appendChild(main);
-  li.appendChild(arrow);
-  return li;
+  card.appendChild(badge);
+  card.appendChild(body);
+  card.appendChild(arrow);
+  return card;
 }
 
 
 /* ------------------------------------------------------------
-   第 3 步：渲染列表
+   ★ 第 3 步：可复用的组件 —— 一个卡片列表
    ------------------------------------------------------------
-   render(数据数组) 会：
-     · 先把列表清空（否则会越堆越多）
-     · 再一条条生成、塞进去
-     · 顺便决定"显示列表"还是"显示空状态"
+   参数是一组数据，产出是一整个列表（ol 里的内容）。
+   这样"数据 → 界面"这一步就被封成了一个小零件。
    ------------------------------------------------------------ */
-function render(list) {
-  listEl.innerHTML = '';   // 清空
-
-  if (list.length === 0) {
-    // 没有结果 → 藏起列表，显示空状态
-    listEl.hidden = true;
-    emptyEl.hidden = false;
-  } else {
-    listEl.hidden = false;
-    emptyEl.hidden = true;
-
-    // DocumentFragment：可以先在"后台"把 30 条都拼好，
-    // 最后一次性放进页面 —— 比一条一条插要快。
-    const frag = document.createDocumentFragment();
-    list.forEach((item, i) => frag.appendChild(createItemEl(item, i)));
-    listEl.appendChild(frag);
-  }
-
-  // 顶部那行小提示（共几条 / 筛出几条）
-  updateHint(list.length);
+function createHotList(list) {
+  const frag = document.createDocumentFragment();
+  list.forEach((item, i) => frag.appendChild(createHotCard(item, i)));
+  return frag;
 }
 
 
 /* ------------------------------------------------------------
-   第 4 步：筛选
+   第 4 步：页面状态管理（四种状态的总开关）
+   ------------------------------------------------------------
+   ★ 这就是 Day 8 的核心。
+
+   四种状态互斥，同一时刻只显示一种：
+     ① loading —— 正在加载
+     ② list    —— 有数据
+     ③ empty   —— 没找到内容
+     ④ error   —— 出错了
+
+   为什么要写成一个函数：因为状态是"切换"的，
+   写成一处，才不会出现"两个状态同时显示"这种乱子。
+   ------------------------------------------------------------ */
+function showState(state, payload) {
+  // 先把四个都藏起来 —— 这一步保证"同一时刻只显示一种"
+  listEl.hidden = true;
+  stateEls.loading.hidden = true;
+  stateEls.empty.hidden = true;
+  stateEls.error.hidden = true;
+
+  switch (state) {
+    case 'loading':
+      stateEls.loading.hidden = false;
+      hintEl.textContent = '正在加载…';
+      break;
+
+    case 'list':
+      listEl.hidden = false;
+      listEl.innerHTML = '';
+      listEl.appendChild(createHotList(payload));
+      updateHint(payload.length);
+      break;
+
+    case 'empty':
+      stateEls.empty.hidden = false;
+      hintEl.textContent = '没有匹配的内容';
+      break;
+
+    case 'error':
+      stateEls.error.hidden = false;
+      hintEl.textContent = '出错了';
+      // 把具体错误显示出来（开发时很有用；正式上线可以藏起来）
+      const detail = document.getElementById('errorDetail');
+      if (detail) detail.textContent = payload && payload.message ? payload.message : '';
+      break;
+  }
+}
+
+
+/* ------------------------------------------------------------
+   第 5 步：筛选
    ------------------------------------------------------------
    规则（来自 PRD.md §4.3）：
      · 实时筛选（输入就变，不用按回车）
@@ -139,32 +232,37 @@ function render(list) {
      · 先去掉首尾空格
      · 只输入空格 → 视为"空"，显示全部，不触发空状态
    ------------------------------------------------------------ */
-function applyFilter() {
-  const raw = inputEl.value;
-  const keyword = raw.trim().toLowerCase();   // 去首尾空格 + 转小写
+let allData = [];   // 存一份"原始数据"，筛选时反复用
 
+function applyFilter() {
+  const keyword = inputEl.value.trim().toLowerCase();   // 去首尾空格 + 转小写
+
+  // 空关键词 → 显示全部（按热度排好序）
   if (keyword === '') {
-    // 空关键词 → 显示全部 30 条
-    render(sortByHeat(getAllData()));
+    showState('list', sortByHeat(allData));
     return;
   }
 
-  const all = sortByHeat(getAllData());
-  // filter 是"留一部分"：标题里包含关键词的才留下
-  const matched = all.filter(item =>
+  // 只在【标题】里找关键词
+  const matched = sortByHeat(allData).filter(item =>
     item.title.toLowerCase().includes(keyword)
   );
-  render(matched);
+
+  if (matched.length === 0) {
+    showState('empty');
+  } else {
+    showState('list', matched);
+  }
 }
 
 
 /* ------------------------------------------------------------
-   第 5 步：点击条目 → 新窗口打开百度搜索
+   第 6 步：点击条目 → 新窗口打开百度搜索
    ------------------------------------------------------------
-   ⚠️ 两个要点（来自 PRD.md §4.3）：
-     1. 用 encodeURIComponent 把标题编码。
-        标题里可能有 & # ? 空格 这些字符，不编码会把网址弄断。
-     2. 用 window.open(..., '_blank') 开新窗口 —— 当前页面不动。
+   ⚠️ 两个要点（PRD.md §4.3）：
+     1. encodeURIComponent 把标题编码 —— 标题里可能有 & # ? 空格，
+        不编码会把网址弄断（例如 & 后面的内容会被丢掉）
+     2. window.open(..., '_blank') 开新窗口，当前页面不动
    ------------------------------------------------------------ */
 function openSearch(title) {
   const url = 'https://www.baidu.com/s?wd=' + encodeURIComponent(title);
@@ -173,42 +271,60 @@ function openSearch(title) {
 
 
 /* ------------------------------------------------------------
-   第 6 步：几个小工具函数
+   第 7 步：两个小工具函数
    ------------------------------------------------------------ */
 
-// 把热度值显示得像样一点（≥1万 就显示成"xx万"）
-// ⚠️ 注意：只影响【显示】，排序用的永远是原始数字（PRD.md §6）
+// 热度值显示得像样一点（≥1万 显示成"xx万"）
+// ⚠️ 只影响【显示】，排序用的永远是原始数字（PRD.md §6）
 function formatHeat(n) {
-  if (n >= 10000) {
-    return (n / 10000).toFixed(1) + '万';
-  }
-  return String(n);
+  return n >= 10000 ? (n / 10000).toFixed(1) + '万' : String(n);
 }
 
-// 顶部那行提示文字
+// 顶部那行提示
 function updateHint(count) {
-  const total = getAllData().length;
-  if (count === total) {
-    hintEl.textContent = '共 ' + total + ' 条';
-  } else {
-    hintEl.textContent = '筛出 ' + count + ' 条（共 ' + total + ' 条）';
-  }
+  const total = allData.length;
+  hintEl.textContent = count === total
+    ? '共 ' + total + ' 条'
+    : '筛出 ' + count + ' 条（共 ' + total + ' 条）';
 }
 
 
 /* ------------------------------------------------------------
-   第 7 步：启动
+   第 8 步：加载数据 + 启动
    ------------------------------------------------------------
-   页面一打开就做的事：
-     · 先把 30 条排好序显示出来
-     · 再给输入框挂上"边打字边筛选"的监听
+   把"取数 → 成功显示 / 失败报错"这段单独抽成 loadData()，
+   这样【启动时】和【点"重新加载"时】都能调它，不用写两遍。
    ------------------------------------------------------------ */
-function init() {
-  render(sortByHeat(getAllData()));
+function loadData() {
+  // ① 先显示"加载中"
+  showState('loading');
 
-  // input 事件 = 输入框内容一变就触发（这就是"实时"）
-  inputEl.addEventListener('input', applyFilter);
+  // ② 取数（异步）
+  fetchHotList()
+    .then(data => {
+      allData = data;                              // 存一份备用
+      showState('list', sortByHeat(allData));      // ③ 成功 → 显示卡片列表
+    })
+    .catch(err => {
+      console.error('取数失败：', err);
+      showState('error', err);                     // ③ 失败 → 显示错误状态
+    });
 }
 
-// 页面结构加载完再启动，避免"找不到元素"
+function init() {
+  // 输入框的监听先挂上，用户随时可以打字
+  inputEl.addEventListener('input', applyFilter);
+
+  // "重新加载"按钮：点了就重新走一遍取数流程
+  if (retryBtn) {
+    retryBtn.addEventListener('click', () => {
+      DEBUG.failure = false;   // 手动重试时，把模拟的故障关掉
+      loadData();
+    });
+  }
+
+  // 启动
+  loadData();
+}
+
 document.addEventListener('DOMContentLoaded', init);

@@ -29,16 +29,33 @@
     <p class="filter-hint" id="filterHint"></p>
   </section>
 
-  <!-- ③ 列表区 -->
+  <!-- ③ 主区域：四种状态，同一时刻只显示一种 -->
   <main class="list-area">
+
+    <!-- 状态一：有数据（卡片列表） -->
     <ol class="hot-list" id="hotList"></ol>
 
-    <!-- ④ 空状态：筛选无结果时显示 -->
-    <div class="empty-state" id="emptyState" hidden>
-      <p class="empty-icon">🔍</p>
-      <p class="empty-text">没有找到相关内容</p>
-      <p class="empty-sub">换个关键词试试</p>
+    <!-- 状态二：加载中 -->
+    <div class="state-box" id="stateLoading" hidden>
+      <div class="spinner"></div>
+      <p class="state-title">正在加载热点…</p>
     </div>
+
+    <!-- 状态三：没有内容（筛选无结果） -->
+    <div class="state-box" id="stateEmpty" hidden>
+      <p class="state-icon">🔍</p>
+      <p class="state-title">没有找到相关内容</p>
+      <p class="state-sub">换个关键词试试</p>
+    </div>
+
+    <!-- 状态四：出错了 -->
+    <div class="state-box is-error" id="stateError" hidden>
+      <p class="state-icon">⚠️</p>
+      <p class="state-title">内容加载失败</p>
+      <p class="state-sub" id="errorDetail"></p>
+      <button class="retry-btn" id="retryBtn" type="button">重新加载</button>
+    </div>
+
   </main>
 
   <footer class="site-footer">
