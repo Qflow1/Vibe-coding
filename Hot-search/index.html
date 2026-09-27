@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>今日热搜 · 3 分钟看完今天全网在传什么</title>
-  <link rel="stylesheet" href="style.css?v=6">
+  <link rel="stylesheet" href="style.css?v=9">
 </head>
 <body>
 
@@ -285,7 +285,16 @@
         placeholder="输入关键词，只看你关心的"
         autocomplete="off">
     </div>
-    <p class="filter-hint" id="filterHint"></p>
+    <!-- 提示文字 + 「只看收藏」开关（Day 11 新增）
+         收藏是用浏览器本地存储记的，不联网、不上传 -->
+    <div class="filter-bar">
+      <p class="filter-hint" id="filterHint"></p>
+      <button class="fav-toggle" id="favToggle" type="button" aria-pressed="false">
+        <span class="fav-toggle-star" aria-hidden="true">★</span>
+        只看收藏
+        <span class="fav-count" id="favCount">0</span>
+      </button>
+    </div>
   </section>
 
   <!-- ③ 主区域：四种状态，同一时刻只显示一种 -->
@@ -301,11 +310,13 @@
       <p class="state-sub">正在取回今日热点…</p>
     </div>
 
-    <!-- 状态三：没有内容（筛选无结果） -->
+    <!-- 状态三：没有内容
+         ⚠️ 这里有两种"空"：关键词没匹配上 / 收藏夹是空的。
+            所以标题和副标题给了 id，交给 app.js 按情况改文案。 -->
     <div class="state-box" id="stateEmpty" hidden>
       <p class="state-glyph">空</p>
-      <p class="state-title">没有找到相关内容</p>
-      <p class="state-sub">换个关键词试试</p>
+      <p class="state-title" id="emptyTitle">没有找到相关内容</p>
+      <p class="state-sub" id="emptySub">换个关键词试试</p>
     </div>
 
     <!-- 状态四：出错了 -->
@@ -319,15 +330,27 @@
   </main>
 
   <footer class="site-footer">
-    <p>共 30 条示例数据 · 点击任意条目，在新窗口打开搜索结果</p>
+    <p>共 30 条示例数据 · 点击条目打开搜索 · 右侧星标可收藏</p>
   </footer>
+
+  <!-- ④ 回到顶部（Day 11 新增）
+       平时藏着（visibility: hidden → 键盘也 Tab 不到它），
+       往下滚过一段距离才浮出来；点一下平滑滚回顶部 -->
+  <button class="back-to-top" id="backToTop" type="button"
+          aria-label="回到顶部" aria-hidden="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 19 V8" />
+      <path d="M6.5 13.5 L12 7.5 L17.5 13.5" />
+      <path d="M6 20.5 H18" />
+    </svg>
+  </button>
 
   <!-- 加载顺序：先数据，后逻辑 -->
   <!-- ⚠️ 调试技巧：给 js/css 的网址后面挂一个 ?v=xxx
        浏览器只要看到网址变了，就会重新下载，不再用缓存。
        这就是"改了代码但页面没变"时的解药。
        正式上线前可以把这个 ?v= 删掉（或者每次发布换一个数字）。 -->
-  <script src="data.js?v=6"></script>
-  <script src="app.js?v=7"></script>
+  <script src="data.js?v=9"></script>
+  <script src="app.js?v=9"></script>
 </body>
 </html>

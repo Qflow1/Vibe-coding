@@ -586,13 +586,78 @@ body {
     0 0 16px 3px rgba(142, 31, 26, .06);
 }
 
-.filter-hint {
+/* 提示文字 + 「只看收藏」开关，排成一行（Day 11 新增）
+   ------------------------------------------------------------
+   为什么开关放在这里而不是别处：它和搜索框一样，都是【筛选条件】。
+   两个条件放在同一条线上，用户一眼就知道"这两个是一起用的"。 */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   margin: 10px 2px 0;
+  min-height: 26px;
+}
+
+.filter-hint {
+  margin: 0;
   font-size: 13px;
   letter-spacing: 1px;
   color: var(--ink-light);
   min-height: 20px;
 }
+
+/* 「只看收藏」开关：平时是一枚素印，开启后像盖了章 */
+.fav-toggle {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 11px;
+  font-family: inherit;
+  font-size: 12.5px;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+  background: transparent;
+  border: 1px solid var(--border-ink);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color .2s, border-color .2s, background .2s;
+}
+
+.fav-toggle-star {
+  font-size: 13px;
+  line-height: 1;
+  opacity: .5;
+  transition: opacity .2s, color .2s;
+}
+
+.fav-toggle:hover { color: var(--cinnabar); border-color: rgba(142, 31, 26, .4); }
+.fav-toggle:hover .fav-toggle-star { opacity: 1; color: var(--cinnabar); }
+
+/* ⭐ 开启状态（aria-pressed="true"）：整枚变朱砂，像盖了章 */
+.fav-toggle[aria-pressed="true"] {
+  color: var(--cinnabar);
+  border-color: rgba(142, 31, 26, .55);
+  background: rgba(142, 31, 26, .06);
+  box-shadow: inset 0 0 10px rgba(142, 31, 26, .06);
+}
+
+.fav-toggle[aria-pressed="true"] .fav-toggle-star { opacity: 1; color: var(--cinnabar); }
+
+/* 收藏数量：一枚小圆牌 */
+.fav-count {
+  min-width: 18px;
+  padding: 0 5px;
+  font-size: 11.5px;
+  line-height: 17px;
+  text-align: center;
+  color: var(--ink-mid);
+  background: rgba(10, 13, 17, .06);
+  border-radius: 9px;
+}
+
+.fav-toggle[aria-pressed="true"] .fav-count { color: #fafbfb; background: var(--cinnabar); }
 
 /* ============================================================
    ③ 卡片列表区
@@ -626,6 +691,8 @@ body {
 .hot-card {
   position: relative;
   display: flex;
+  /* ⭐ Day 11：允许换行 —— 展开的"详情抽屉"靠它才能占满整行掉到下面去 */
+  flex-wrap: wrap;
   align-items: center;
   gap: 18px;
   padding: 15px 20px 15px 24px;
@@ -762,19 +829,243 @@ body {
   color: var(--ink-light);
 }
 
-/* ---------- 右边：一个淡淡的箭头 ---------- */
-.card-arrow {
+/* ---------- 右边：三个小动作按钮（Day 11 新增） ----------
+   ⚠️ 这里原来是"一个淡淡的箭头 ›"，暗示"点整张卡片会跳走"。
+      加了按钮之后，箭头会和按钮抢注意力、还容易让人以为
+      "点箭头 = 展开"。所以干脆去掉它，改成三个明确的小按钮：
+        复制 —— 复制这条的搜索链接
+        星标 —— 收藏 / 取消收藏
+        箭头 —— 展开 / 收起详情
+   ------------------------------------------------------------ */
+.card-actions {
   flex: 0 0 auto;
-  font-size: 20px;
-  color: var(--ink-light);
-  opacity: .5;
-  transition: transform .18s, opacity .18s, color .18s;
+  display: flex;
+  align-items: center;
+  gap: 2px;
 }
 
-.hot-card:hover .card-arrow {
-  transform: translateX(3px);
-  opacity: 1;
+/* 三个按钮共用的底子：平时几乎看不见（只有淡墨字），
+   鼠标过来才浮出底色 —— 不让按钮抢了标题的戏 */
+.card-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  height: 30px;
+  min-width: 30px;
+  padding: 0 8px;
+  font-family: inherit;
+  font-size: 12px;
+  letter-spacing: .5px;
+  color: var(--ink-light);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  cursor: pointer;
+  /* ⭐ 反馈的关键：按下时缩一下，用户立刻知道"点到了" */
+  transition: color .18s, background .18s, border-color .18s, transform .12s;
+}
+
+.card-btn:hover {
+  color: var(--ink);
+  background: rgba(10, 13, 17, .05);
+  border-color: var(--border-card);
+}
+
+.card-btn:active { transform: scale(.92); }
+
+/* 图标统一体例：线条描边，和两侧装饰的国风线条一个味道 */
+.card-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ⭐ 复制成功：按钮变朱砂，像落了一枚小印 */
+.card-btn.is-copied {
   color: var(--cinnabar);
+  background: rgba(142, 31, 26, .07);
+  border-color: rgba(142, 31, 26, .3);
+}
+
+/* ⭐ 已收藏：星星填实、变朱砂 */
+.card-btn.is-fav { color: var(--cinnabar); }
+
+.card-btn.is-fav svg {
+  fill: var(--cinnabar);
+  stroke: var(--cinnabar);
+}
+
+/* 刚点收藏的一瞬间：星星"盖"一下 —— 这就是"生效了"最直接的信号 */
+@keyframes starStamp {
+  0%   { transform: scale(1); }
+  36%  { transform: scale(1.45); }
+  100% { transform: scale(1); }
+}
+
+.card-btn.just-faved svg {
+  animation: starStamp .4s cubic-bezier(.22, 1.4, .5, 1);
+}
+
+/* 展开箭头：展开后翻个身 */
+.card-btn.is-open { color: var(--ink); }
+
+.card-btn.is-open svg { transform: rotate(180deg); }
+
+.card-btn svg { transition: transform .24s ease; }
+
+/* ---------- 详情抽屉（Day 11 新增） ----------
+   flex: 0 0 100% —— 靠父级的 flex-wrap 撑满一整行，掉到卡片下方。
+   上沿用一道墨痕和正文分开（不是数码边框）。 */
+.card-detail {
+  flex: 0 0 100%;
+  padding: 13px 0 3px;
+  position: relative;
+  animation: unfold .26s ease-out;
+}
+
+.card-detail::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+              transparent 0%,
+              rgba(10, 13, 17, .12) 8%,
+              rgba(10, 13, 17, .24) 44%,
+              rgba(10, 13, 17, .11) 88%,
+              transparent 100%);
+}
+
+@keyframes unfold {
+  from { opacity: 0; transform: translateY(-7px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* 抽屉里的小标题：「同来源上榜」 */
+.detail-label {
+  margin: 0 0 8px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  color: var(--ink-light);
+}
+
+/* 同来源的其它条目：一行一条，前面一个小墨点 */
+.detail-peer {
+  margin: 0 0 5px;
+  padding-left: 14px;
+  position: relative;
+  font-size: 13px;
+  letter-spacing: .4px;
+  color: var(--ink-mid);
+  line-height: 1.6;
+}
+
+.detail-peer::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 9px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: .55;
+}
+
+/* 没有其它条目时的一句说明 */
+.detail-empty {
+  margin: 0;
+  font-size: 12.5px;
+  letter-spacing: .5px;
+  color: var(--ink-light);
+}
+
+/* 原始数值：给"想看个究竟"的人一个真数（页面上显示的是"xx万"） */
+.detail-raw {
+  margin: 9px 0 0;
+  font-size: 12px;
+  letter-spacing: .6px;
+  color: var(--ink-light);
+}
+
+.detail-raw b { font-weight: 600; color: var(--ink-mid); }
+
+/* ---------- 键盘用户的焦点提示（余力加练） ----------
+   ⚠️ 用 :focus-visible 而不是 :focus ——
+      鼠标点击不会触发它（不然点一下满屏都是框），
+      只有键盘 Tab 过来才亮。 */
+.card-btn:focus-visible,
+.fav-toggle:focus-visible,
+.back-to-top:focus-visible,
+.retry-btn:focus-visible {
+  outline: 2px solid rgba(142, 31, 26, .55);
+  outline-offset: 2px;
+}
+
+/* ---------- 回到顶部（Day 11 新增） ----------
+   藏起来时用 visibility:hidden 而不是 opacity:0 ——
+   因为 opacity:0 的元素【键盘仍然能 Tab 到】，那就成了"看不见却能选中"的坑。
+   visibility:hidden 才是真的不可聚焦。 */
+.back-to-top {
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  z-index: 20;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--cinnabar);
+  background: var(--paper-card);
+  border: 1.5px solid rgba(142, 31, 26, .5);
+  border-radius: 50%;
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .24s ease, transform .24s ease, visibility .24s,
+              background .2s, color .2s;
+  box-shadow: 0 2px 10px rgba(10, 13, 17, .13),
+              inset 0 0 10px rgba(142, 31, 26, .05);
+}
+
+.back-to-top.is-visible {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+
+.back-to-top svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.back-to-top:hover { background: var(--cinnabar); color: #fafbfb; }
+
+/* 宽屏时把它推进内容区右下角，和正文对齐（不压在两边的装饰上） */
+@media (min-width: 820px) {
+  .back-to-top { right: calc(50% - 372px); }
+}
+
+/* 系统设了"减少动态效果"就别播动画 —— 照顾前庭敏感的人 */
+@media (prefers-reduced-motion: reduce) {
+  .card-btn.just-faved svg,
+  .card-detail { animation: none; }
+  .back-to-top { transition: opacity .01s, visibility .01s; }
 }
 
 /* ============================================================
