@@ -745,6 +745,19 @@ function loadData() {
 }
 
 function init() {
+  /* ⭐【Day 13】支持从门户首页"带关键词跳转"过来。
+     ------------------------------------------------------------
+     门户首页的搜索框输入后，会跳转到 hot.html?kw=关键词。
+     这里把 kw 读出来、预填进搜索框，这样数据一到 applyFilter()
+     就会自动按这个词筛 —— 用户从门户搜"AI"，进来直接看到"AI"的结果，
+     不用再打一遍字。
+     （applyFilter 在数据到达后才会真正筛，此刻预填只是先放进框里） */
+  const q = new URLSearchParams(location.search);
+  const kwFromUrl = q.get('kw');
+  if (kwFromUrl) {
+    inputEl.value = kwFromUrl;
+  }
+
   // 输入框的监听先挂上，用户随时可以打字
   inputEl.addEventListener('input', applyFilter);
 

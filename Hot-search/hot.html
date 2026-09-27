@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>热点速览 · 今日热搜</title>
+  <link rel="stylesheet" href="style.css?v=12">
+</head>
+<body>
+
+  <!-- ⓪ 左右两侧的国风装饰（只在宽屏显示，窄屏自动隐藏）
+       全部用 CSS + SVG 画，不加载任何图片
+       元素从上到下均匀铺满整个侧边，不留大片空白 -->
+  <aside class="side-deco side-left" aria-hidden="true">
+    <!-- 回纹边框 -->
+    <div class="deco-fret"></div>
+
+    <!-- 梅花枝：老枝 + 五瓣梅花 -->
+    <div class="deco-plum">
+      <svg viewBox="0 0 92 76" xmlns="http://www.w3.org/2000/svg">
+        <!-- 主枝：从右下往左上斜出 -->
+        <path d="M6 72 C22 62 30 48 34 32 C36 24 40 18 48 14"
+              fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- 两根侧枝 -->
+        <path d="M30 44 C40 40 50 42 58 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M40 22 C46 14 56 10 66 10" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <!-- 梅花（五瓣）：用五个小圆弧围成一朵 -->
+        <g stroke="currentColor" stroke-width="1.1" fill="none">
+          <!-- 花一 -->
+          <circle cx="48" cy="12" r="2.6"/>
+          <circle cx="53.2" cy="15.8" r="2.6"/>
+          <circle cx="51.2" cy="22" r="2.6"/>
+          <circle cx="44.8" cy="22" r="2.6"/>
+          <circle cx="42.8" cy="15.8" r="2.6"/>
+          <circle cx="48" cy="17" r="1.5" fill="currentColor"/>
+          <!-- 花二 -->
+          <circle cx="62" cy="44" r="2.3"/>
+          <circle cx="66.5" cy="47.4" r="2.3"/>
+          <circle cx="64.8" cy="52.8" r="2.3"/>
+          <circle cx="59.2" cy="52.8" r="2.3"/>
+          <circle cx="57.5" cy="47.4" r="2.3"/>
+          <circle cx="62" cy="48.5" r="1.3" fill="currentColor"/>
+          <!-- 花三（小） -->
+          <circle cx="26" cy="30" r="1.9"/>
+          <circle cx="29.6" cy="32.8" r="1.9"/>
+          <circle cx="28.2" cy="37.2" r="1.9"/>
+          <circle cx="23.8" cy="37.2" r="1.9"/>
+          <circle cx="22.4" cy="32.8" r="1.9"/>
+          <circle cx="26" cy="33.7" r="1.1" fill="currentColor"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 竹枝：竹节 + 竹叶 -->
+    <div class="deco-bamboo">
+      <svg viewBox="0 0 60 150" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="0" x2="30" y2="150" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        <line x1="22" y1="34"  x2="38" y2="34"  stroke="currentColor" stroke-width="1.6"/>
+        <line x1="22" y1="82"  x2="38" y2="82"  stroke="currentColor" stroke-width="1.6"/>
+        <line x1="22" y1="128" x2="38" y2="128" stroke="currentColor" stroke-width="1.6"/>
+        <path d="M30 40 C42 34 52 38 58 46 C46 52 34 50 30 40 Z" fill="none" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M30 88 C18 82 8 86 2 94 C14 100 26 98 30 88 Z" fill="none" stroke="currentColor" stroke-width="1.3"/>
+      </svg>
+    </div>
+
+    <!-- 竖排诗句 -->
+    <div class="deco-verse">
+      <span>人</span><span>间</span><span>烟</span><span>火</span><span>气</span>
+      <i class="deco-dot"></i>
+      <span>最</span><span>抚</span><span>凡</span><span>人</span><span>心</span>
+    </div>
+
+    <!-- 太湖石：瘦皱漏透，带皴纹 -->
+    <div class="deco-rock">
+      <svg viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- 外轮廓：一块立起来的石头，左窄右宽，顶部有起伏 -->
+        <path d="M40 8
+                 C44 18 42 26 38 32
+                 C48 30 56 34 58 44
+                 C68 42 78 48 80 58
+                 C82 68 74 74 64 74
+                 L24 74
+                 C14 74 8 68 10 58
+                 C12 48 20 40 30 40
+                 C30 28 34 16 40 8 Z"
+              fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <!-- 皴纹 -->
+        <g fill="none" stroke="currentColor" stroke-width=".9" opacity=".7" stroke-linecap="round">
+          <path d="M38 20 C35 36 34 56 36 73"/>
+          <path d="M52 32 C55 46 57 60 55 73"/>
+          <path d="M66 48 C68 58 68 66 66 73"/>
+          <path d="M22 46 C20 56 20 66 22 73"/>
+        </g>
+        <ellipse cx="44" cy="54" rx="4.5" ry="7" fill="none" stroke="currentColor" stroke-width="1.1"/>
+        <path d="M2 78 C30 75 70 75 98 77" fill="none" stroke="currentColor" stroke-width="1" opacity=".55"/>
+      </svg>
+    </div>
+
+    <!-- 水波纹 -->
+    <div class="deco-wave">
+      <svg viewBox="0 0 90 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 8 Q12 2 22 8 T42 8 T62 8 T82 8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+        <path d="M2 18 Q12 12 22 18 T42 18 T62 18 T82 18" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </aside>
+
+  <aside class="side-deco side-right" aria-hidden="true">
+    <div class="deco-fret"></div>
+
+    <!-- 兰花：飘逸的长叶 + 一茎一花 -->
+    <div class="deco-orchid">
+      <svg viewBox="0 0 90 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- 三片长叶：自左下根部向外散开，有弧度 -->
+        <path d="M12 76 C18 50 26 28 24 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+        <path d="M12 76 C28 58 44 44 72 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+        <path d="M12 76 C30 62 52 56 84 62" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <!-- 花茎 -->
+        <path d="M16 70 C22 52 28 40 34 30" fill="none" stroke="currentColor" stroke-width="1" opacity=".8"/>
+        <!-- 兰花：外三瓣 + 内二瓣 + 蕊 -->
+        <g fill="none" stroke="currentColor" stroke-width="1.1">
+          <path d="M34 30 C28 24 26 16 30 12 C34 16 36 24 34 30 Z"/>
+          <path d="M34 30 C40 26 46 24 50 26 C46 30 40 32 34 30 Z"/>
+          <path d="M34 30 C32 36 30 42 26 44 C26 38 30 32 34 30 Z"/>
+          <path d="M34 30 C36 36 40 40 44 40 C42 34 38 30 34 30 Z"/>
+          <circle cx="34" cy="30" r="1.6" fill="currentColor"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 折扇 -->
+    <div class="deco-fan">
+      <svg viewBox="0 0 110 72" xmlns="http://www.w3.org/2000/svg">
+        <path d="M55 66 L14 14 A52 52 0 0 1 96 14 Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+        <line x1="55" y1="66" x2="30" y2="18" stroke="currentColor" stroke-width="1"/>
+        <line x1="55" y1="66" x2="42" y2="12" stroke="currentColor" stroke-width="1"/>
+        <line x1="55" y1="66" x2="55" y2="10" stroke="currentColor" stroke-width="1"/>
+        <line x1="55" y1="66" x2="68" y2="12" stroke="currentColor" stroke-width="1"/>
+        <line x1="55" y1="66" x2="80" y2="18" stroke="currentColor" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div class="deco-verse">
+      <span>一</span><span>日</span><span>看</span><span>尽</span>
+      <i class="deco-dot"></i>
+      <span>天</span><span>下</span><span>事</span>
+    </div>
+
+    <!-- 朱砂闲章 -->
+    <div class="deco-seal">观</div>
+
+    <!-- 松枝：枝干 + 成簇的松针 -->
+    <div class="deco-pine">
+      <svg viewBox="0 0 100 74" xmlns="http://www.w3.org/2000/svg">
+        <!-- 主枝 -->
+        <path d="M4 62 C28 54 54 42 90 14"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        <!-- 三簇松针：每簇从一点向外散开 -->
+        <g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" opacity=".9">
+          <!-- 第一簇 -->
+          <path d="M34 52 L22 42 M34 52 L24 52 M34 52 L26 62 M34 52 L35 40 M34 52 L45 44"/>
+          <!-- 第二簇 -->
+          <path d="M58 38 L46 26 M58 38 L47 37 M58 38 L50 48 M58 38 L59 25 M58 38 L70 30"/>
+          <!-- 第三簇 -->
+          <path d="M82 22 L72 10 M82 22 L71 21 M82 22 L74 32 M82 22 L83 8 M82 22 L94 14"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- 云纹 -->
+    <div class="deco-cloud">
+      <svg viewBox="0 0 90 44" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 34 C4 26 10 22 16 24 C17 16 26 12 33 17 C37 11 47 12 50 19 C57 14 67 18 67 26 C74 25 80 29 80 35"
+              fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <path d="M14 40 C14 36 18 34 21 36" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+        <path d="M56 40 C56 36 61 34 64 36" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+      </svg>
+    </div>
+  </aside>
+
+  <!-- ① 顶部区（水墨题头） -->
+  <header class="site-header">
+    <!-- 泼墨底：同门户首页共用同一套 SVG 墨团，保持视觉一致 -->
+    <svg class="header-ink" viewBox="0 0 720 200" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="inkBlob1" cx="34%" cy="40%" r="64%">
+          <stop offset="0%"   stop-color="#0a0d10" stop-opacity=".62"/>
+          <stop offset="30%"  stop-color="#0a0d10" stop-opacity=".50"/>
+          <stop offset="58%"  stop-color="#0a0d10" stop-opacity=".26"/>
+          <stop offset="82%"  stop-color="#0a0d10" stop-opacity=".09"/>
+          <stop offset="100%" stop-color="#0a0d10" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="inkBlob2" cx="45%" cy="45%" r="60%">
+          <stop offset="0%"   stop-color="#0a0d10" stop-opacity=".26"/>
+          <stop offset="55%"  stop-color="#0a0d10" stop-opacity=".12"/>
+          <stop offset="100%" stop-color="#0a0d10" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="inkRough" x="-30%" y="-30%" width="160%" height="160%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="3" seed="7" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+          <feGaussianBlur in="displaced" stdDeviation="3"/>
+        </filter>
+        <radialGradient id="inkHalo1" cx="34%" cy="40%" r="64%">
+          <stop offset="0%"   stop-color="#0a0d10" stop-opacity="0"/>
+          <stop offset="52%"  stop-color="#0a0d10" stop-opacity="0"/>
+          <stop offset="72%"  stop-color="#0a0d10" stop-opacity=".20"/>
+          <stop offset="86%"  stop-color="#0a0d10" stop-opacity=".11"/>
+          <stop offset="100%" stop-color="#0a0d10" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <path filter="url(#inkRough)" fill="url(#inkBlob1)"
+            d="M4 2
+               C34 -4, 66 6, 84 22
+               C100 36, 110 48, 124 54
+               C142 62, 160 56, 174 64
+               C188 72, 186 86, 170 92
+               C150 100, 124 96, 104 101
+               C78 107, 58 118, 34 116
+               C12 114, -4 100, -8 76
+               C-13 52, -14 24, 4 2 Z"/>
+      <path filter="url(#inkRough)" fill="url(#inkHalo1)"
+            d="M4 2
+               C34 -4, 66 6, 84 22
+               C100 36, 110 48, 124 54
+               C142 62, 160 56, 174 64
+               C188 72, 186 86, 170 92
+               C150 100, 124 96, 104 101
+               C78 107, 58 118, 34 116
+               C12 114, -4 100, -8 76
+               C-13 52, -14 24, 4 2 Z"/>
+      <path filter="url(#inkRough)" fill="url(#inkBlob2)"
+            d="M540 14
+               C572 4, 608 18, 622 42
+               C634 62, 626 84, 604 94
+               C578 106, 542 98, 528 78
+               C516 60, 520 30, 540 14 Z"/>
+    </svg>
+
+    <p class="header-seal">热搜</p>
+    <h1 class="site-title">热点速览</h1>
+    <p class="site-desc">三分钟，看尽今日人间</p>
+    <p class="site-note">当前为<b>示例数据</b>，用于演示页面效果，非真实平台数据</p>
+    <a class="back-home" href="index.html">← 返回首页</a>
+  </header>
+
+  <!-- ② 筛选区 -->
+  <section class="filter-area">
+    <div class="search-box">
+      <span class="search-icon">检索</span>
+      <input
+        type="text"
+        id="keywordInput"
+        class="search-input"
+        placeholder="输入关键词，只看你关心的"
+        autocomplete="off">
+    </div>
+    <!-- 提示文字 + 「只看收藏」开关（Day 11 新增）
+         收藏是用浏览器本地存储记的，不联网、不上传 -->
+    <div class="filter-bar">
+      <p class="filter-hint" id="filterHint"></p>
+      <button class="fav-toggle" id="favToggle" type="button" aria-pressed="false">
+        <span class="fav-toggle-star" aria-hidden="true">★</span>
+        只看收藏
+        <span class="fav-count" id="favCount">0</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ③ 主区域：四种状态，同一时刻只显示一种 -->
+  <main class="list-area">
+
+    <!-- 状态一：有数据（卡片列表） -->
+    <ol class="hot-list" id="hotList"></ol>
+
+    <!-- 状态二：加载中 -->
+    <div class="state-box" id="stateLoading" hidden>
+      <div class="spinner"></div>
+      <p class="state-title">正在展卷</p>
+      <p class="state-sub">正在取回今日热点…</p>
+    </div>
+
+    <!-- 状态三：没有内容
+         ⚠️ 这里有两种"空"：关键词没匹配上 / 收藏夹是空的。
+            所以标题和副标题给了 id，交给 app.js 按情况改文案。 -->
+    <div class="state-box" id="stateEmpty" hidden>
+      <p class="state-glyph">空</p>
+      <p class="state-title" id="emptyTitle">没有找到相关内容</p>
+      <p class="state-sub" id="emptySub">换个关键词试试</p>
+    </div>
+
+    <!-- 状态四：出错了 -->
+    <div class="state-box is-error" id="stateError" hidden>
+      <p class="state-glyph is-error-glyph">误</p>
+      <p class="state-title">内容加载失败</p>
+      <p class="state-sub" id="errorDetail"></p>
+      <button class="retry-btn" id="retryBtn" type="button">重新加载</button>
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>共 30 条示例数据 · 点击条目打开搜索 · 右侧星标可收藏</p>
+  </footer>
+
+  <!-- ④ 回到顶部（Day 11 新增） -->
+  <button class="back-to-top" id="backToTop" type="button"
+          aria-label="回到顶部" aria-hidden="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path d="M12 19 V8" />
+      <path d="M6.5 13.5 L12 7.5 L17.5 13.5" />
+      <path d="M6 20.5 H18" />
+    </svg>
+  </button>
+
+  <!-- 加载顺序：先数据，后逻辑 -->
+  <script src="data.js?v=12"></script>
+  <script src="app.js?v=12"></script>
+</body>
+</html>

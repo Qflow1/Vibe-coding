@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>今日热搜 · 三分钟看尽人间事</title>
+  <title>热度趋势分析 · 今日热搜</title>
   <link rel="stylesheet" href="style.css?v=12">
 </head>
 <body>
 
-  <!-- 两侧国风装饰（与热点速览页共用同一套，保持整体感） -->
+  <!-- 两侧国风装饰（共用同一套） -->
   <aside class="side-deco side-left" aria-hidden="true">
     <div class="deco-fret"></div>
     <div class="deco-plum">
@@ -56,7 +56,6 @@
         <path d="M12 76 C18 50 26 28 24 6" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
         <path d="M12 76 C28 58 44 44 72 40" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
         <path d="M12 76 C30 62 52 56 84 62" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
-        <path d="M16 70 C22 52 28 40 34 30" fill="none" stroke="currentColor" stroke-width="1" opacity=".8"/>
         <g fill="none" stroke="currentColor" stroke-width="1.1">
           <path d="M34 30 C28 24 26 16 30 12 C34 16 36 24 34 30 Z"/>
           <path d="M34 30 C40 26 46 24 50 26 C46 30 40 32 34 30 Z"/>
@@ -91,93 +90,94 @@
     </div>
   </aside>
 
-  <!-- ⭐ 门户首页主体 -->
+  <!-- ⭐ 热度趋势分析页主体 -->
   <main class="portal">
 
-    <!-- 顶部标题 -->
     <header class="portal-head">
-      <p class="header-seal">热搜</p>
-      <h1 class="site-title">今日热搜</h1>
-      <p class="site-desc">三分钟，看尽今日人间</p>
+      <p class="header-seal">趋势</p>
+      <h1 class="site-title">热度趋势分析</h1>
+      <p class="site-desc">看一个话题，这几天是涨是落</p>
+      <a class="back-home" href="index.html">← 返回首页</a>
     </header>
 
-    <!-- ⭐ 形象图案 + 融合搜索框（核心区）
-         图案画的是"一纸报晓"：一轮墨日 + 飞鸟 + 远山，
-         寓意"消息随风、传遍四方"。
-         搜索框嵌在图案正下方，与图案连成一体 ——
-         图案是"信息从远处飞来"，搜索框是"你伸手去接住它"。 -->
-    <section class="portal-hero">
+    <!-- ⚠️ 诚实标注：以下曲线是【示例数据】，非真实统计 -->
+    <section class="trend-body">
 
-      <!-- 图案层（纯 SVG，零图片） -->
-      <div class="hero-art" aria-hidden="true">
-        <svg viewBox="0 0 400 220" preserveAspectRatio="xMidYMid meet">
+      <div class="trend-disclaimer">
+        <p class="trend-warn">⚠️ 以下为<strong>示例数据</strong>，仅演示页面效果，不代表任何真实话题的真实热度。</p>
+        <p class="trend-warn-sub">真实的趋势曲线，需要接入后端、按天记录历史数据后才能展示（见 PRD 5.4，课后路线图）。</p>
+      </div>
+
+      <!-- 示意曲线：用纯 SVG 画一条"近 7 天热度"的假曲线 -->
+      <div class="trend-chart" role="img" aria-label="近 7 天热度变化示意图（示例数据）">
+        <svg viewBox="0 0 600 260" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <!-- 墨日的浓淡：中心比第一版淡，边缘散开 -->
-            <radialGradient id="heroSun" cx="50%" cy="50%" r="50%">
-              <stop offset="0%"   stop-color="#0a0d10" stop-opacity=".58"/>
-              <stop offset="55%"  stop-color="#0a0d10" stop-opacity=".38"/>
-              <stop offset="80%"  stop-color="#0a0d10" stop-opacity=".14"/>
-              <stop offset="100%" stop-color="#0a0d10" stop-opacity="0"/>
-            </radialGradient>
-            <!-- 远山的淡墨 -->
-            <linearGradient id="heroHill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#0a0d10" stop-opacity=".30"/>
-              <stop offset="100%" stop-color="#0a0d10" stop-opacity=".04"/>
+            <!-- 曲线下的淡墨填充 -->
+            <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#8e1f1a" stop-opacity=".18"/>
+              <stop offset="100%" stop-color="#8e1f1a" stop-opacity="0"/>
             </linearGradient>
           </defs>
 
-          <!-- 远山：底部两道淡墨 -->
-          <path d="M0 200 C70 160 130 185 200 170 C270 155 340 175 400 162 L400 220 L0 220 Z"
-                fill="url(#heroHill)"/>
-          <path d="M0 210 C90 190 170 205 260 195 C330 188 380 196 400 190 L400 220 L0 220 Z"
-                fill="url(#heroHill)"/>
-
-          <!-- 墨日：一轮，微微靠右 -->
-          <circle cx="230" cy="88" r="52" fill="url(#heroSun)"/>
-
-          <!-- 飞鸟：三只，象征消息从远处飞来 -->
-          <g stroke="#0a0d10" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".8">
-            <path d="M70 70 C80 62 92 62 100 70"/>
-            <path d="M92 62 C98 66 98 74 100 70"/>
-          </g>
-          <g stroke="#0a0d10" stroke-width="1.9" fill="none" stroke-linecap="round" opacity=".7">
-            <path d="M118 48 C126 42 136 42 142 48"/>
-            <path d="M136 42 C140 46 140 52 142 48"/>
-          </g>
-          <g stroke="#0a0d10" stroke-width="1.6" fill="none" stroke-linecap="round" opacity=".55">
-            <path d="M155 82 C161 78 169 78 174 82"/>
-            <path d="M169 78 C172 81 172 84 174 82"/>
+          <!-- 横轴刻度线（7 天） -->
+          <g stroke="#0a0d10" stroke-width="1" opacity=".15">
+            <line x1="40"  y1="20" x2="40"  y2="230"/>
+            <line x1="130" y1="20" x2="130" y2="230"/>
+            <line x1="220" y1="20" x2="220" y2="230"/>
+            <line x1="310" y1="20" x2="310" y2="230"/>
+            <line x1="400" y1="20" x2="400" y2="230"/>
+            <line x1="490" y1="20" x2="490" y2="230"/>
+            <line x1="580" y1="20" x2="580" y2="230"/>
           </g>
 
-          <!-- 几点淡墨飞白，破呆板 -->
-          <circle cx="70" cy="130" r="3" fill="#0a0d10" opacity=".10"/>
-          <circle cx="320" cy="60" r="4" fill="#0a0d10" opacity=".08"/>
-          <circle cx="330" cy="150" r="2.5" fill="#0a0d10" opacity=".10"/>
+          <!-- 底部基线 -->
+          <line x1="40" y1="230" x2="580" y2="230" stroke="#0a0d10" stroke-width="1.2" opacity=".35"/>
+
+          <!-- 假数据折线 + 填充（近 7 天热度，先涨后落再回升） -->
+          <polygon points="40,230 40,180 130,120 220,150 310,90 400,70 490,110 580,80 580,230"
+                   fill="url(#chartFill)"/>
+          <polyline points="40,180 130,120 220,150 310,90 400,70 490,110 580,80"
+                    fill="none" stroke="#8e1f1a" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round"/>
+
+          <!-- 数据点 -->
+          <g fill="#8e1f1a">
+            <circle cx="40"  cy="180" r="3.2"/>
+            <circle cx="130" cy="120" r="3.2"/>
+            <circle cx="220" cy="150" r="3.2"/>
+            <circle cx="310" cy="90"  r="3.2"/>
+            <circle cx="400" cy="70"  r="3.2"/>
+            <circle cx="490" cy="110" r="3.2"/>
+            <circle cx="580" cy="80"  r="3.2"/>
+          </g>
+
+          <!-- 横轴日期标签 -->
+          <g fill="#0a0d10" font-size="11" text-anchor="middle" opacity=".65">
+            <text x="40"  y="248">D-6</text>
+            <text x="130" y="248">D-5</text>
+            <text x="220" y="248">D-4</text>
+            <text x="310" y="248">D-3</text>
+            <text x="400" y="248">D-2</text>
+            <text x="490" y="248">D-1</text>
+            <text x="580" y="248">今天</text>
+          </g>
         </svg>
+        <p class="trend-caption">近 7 天热度变化（示例）</p>
       </div>
 
-      <!-- 融合搜索框：紧贴图案下方，视觉上"接住"图案 -->
-      <div class="hero-search">
-        <span class="search-icon">检索</span>
-        <input
-          type="text"
-          id="portalKeyword"
-          class="search-input"
-          placeholder="搜一个你关心的话题，看它在不在热搜里"
-          autocomplete="off">
+      <!-- 未来功能占位 -->
+      <div class="trend-future">
+        <p class="trend-future-title">这里将来会有什么（均待接入后端）</p>
+        <ul class="trend-future-list">
+          <li>跨平台出现频次 —— 一个话题在几个平台、被提到了几次</li>
+          <li>一周热度趋势 —— 按天记录的真实曲线（替代上方的示例图）</li>
+          <li>AI 解读 —— 用大白话讲清这个话题为什么突然热起来</li>
+        </ul>
       </div>
 
-      <!-- 入口按钮 -->
-      <div class="hero-actions">
-        <a class="portal-btn portal-btn-main" href="hot.html">热点速览</a>
-        <a class="portal-btn" href="trend.html">热度趋势分析</a>
-      </div>
-
-      <p class="portal-note">当前为<b>示例数据</b> · 非真实平台数据</p>
     </section>
 
   </main>
 
-  <script src="portal.js?v=10"></script>
 </body>
 </html>

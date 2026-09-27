@@ -1221,3 +1221,242 @@ body {
   .search-input { padding-left: 58px; }
   .filter-area, .list-area { padding: 0 14px; }
 }
+
+/* ============================================================
+   ⑦ 多页面结构（Day 13 新增）
+   ------------------------------------------------------------
+   产品从"单页"改为"门户首页 + 热点速览 + 趋势分析"三页。
+   门户页和趋势页共用一个 .portal 容器，下面的样式管它们俩，
+   外加一个"返回首页"的小链接。
+   ============================================================ */
+
+/* 门户页 / 趋势页的主体：内容区居中，与列表页同一宽度 */
+.portal {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 40px 24px 64px;
+  position: relative;
+}
+
+/* 门户页顶部标题：复用列表页的印章 + 标题 + 副标题，居中排布 */
+.portal-head {
+  text-align: center;
+  margin-bottom: 30px;
+  position: relative;
+  padding-top: 26px;
+}
+
+/* 印章在门户页里也居中，不靠右（列表页是右上角，门户页是 C 位） */
+.portal-head .header-seal {
+  position: static;
+  margin: 0 auto 14px;
+}
+
+/* "返回首页"小链接：淡墨小字，悬停变朱砂 */
+.back-home {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 12.5px;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+  text-decoration: none;
+  transition: color .2s;
+}
+
+.back-home:hover { color: var(--cinnabar); }
+
+/* ---------- 门户页核心区：图案 + 融合搜索框 + 按钮 ---------- */
+.portal-hero {
+  text-align: center;
+}
+
+/* 图案层：墨日 + 飞鸟 + 远山，一条"信息从远处飞来"的意象 */
+.hero-art {
+  margin: 0 auto 2px;
+  max-width: 460px;
+}
+
+.hero-art svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  /* ⭐ 墨日第一版太黑太实，像一团黑影压在纸上。
+     整体降一点不透明度，让它"淡"下来 —— 水墨讲究墨分五色，
+     门户页的图案是背景性的，不该比标题还重。 */
+  opacity: .88;
+}
+
+/* 融合搜索框：紧贴图案，视觉上"接住"上面飞来的信息。
+   做法：搜索框上方不留空隙（hero-art 的 margin-bottom 只有 2px），
+   并且用和图案呼应的墨晕，让它像从画里长出来的一样 */
+.hero-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 460px;
+  margin: 0 auto;
+}
+
+.hero-search .search-input {
+  padding: 15px 18px 15px 76px;
+  font-size: 15px;
+  /* 和列表页输入框同一套晕染，但去掉顶部圆角，让它"接"在图案下方 */
+  border-radius: 3px;
+}
+
+/* 入口按钮：两枚，主按钮是"热点速览"，次按钮是"趋势分析" */
+.hero-actions {
+  margin-top: 24px;
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.portal-btn {
+  display: inline-block;
+  padding: 12px 30px;
+  font-size: 15px;
+  letter-spacing: 4px;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: background .2s, color .2s, box-shadow .2s, transform .15s;
+  /* ⚠️ 默认样子 = 次按钮（素印）。
+     ⭐ 这里踩过一个 CSS 顺序坑：第一版把 .portal-btn 写在了
+        .portal-btn-main 之后，结果 background:transparent 把主按钮的
+        朱砂实底盖掉了 —— 两个按钮看起来一模一样。
+        规矩：公共样式在前、特殊样式在后，特殊的那份才能覆盖公共的。 */
+  color: var(--cinnabar);
+  border: 1px solid rgba(142, 31, 26, .5);
+  background: transparent;
+}
+
+.portal-btn:not(.portal-btn-main):hover {
+  background: rgba(142, 31, 26, .07);
+  transform: translateY(-1px);
+}
+
+/* 主按钮：朱砂实底白字，像盖了一枚大印（放在公共样式之后，覆盖才生效） */
+.portal-btn-main {
+  color: #fafbfb;
+  background: var(--cinnabar);
+  border: 1px solid var(--cinnabar);
+  box-shadow: 0 2px 8px rgba(142, 31, 26, .25);
+}
+
+.portal-btn-main:hover {
+  background: var(--cinnabar-lt);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(142, 31, 26, .32);
+}
+
+.portal-note {
+  margin: 22px 0 0;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+}
+
+/* ---------- 趋势页 ---------- */
+.trend-body {
+  max-width: 620px;
+  margin: 0 auto;
+}
+
+/* 诚实标注：示例数据 */
+.trend-disclaimer {
+  margin-bottom: 26px;
+  padding: 16px 20px;
+  background: var(--paper-card);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px rgba(142, 31, 26, .18),
+    inset 0 0 16px rgba(142, 31, 26, .05),
+    0 1px 3px rgba(10, 13, 17, .06);
+}
+
+.trend-warn {
+  margin: 0 0 6px;
+  font-size: 13.5px;
+  letter-spacing: .5px;
+  color: var(--cinnabar);
+}
+
+.trend-warn-sub {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: .5px;
+  color: var(--ink-light);
+}
+
+/* 趋势图容器 */
+.trend-chart {
+  padding: 22px 20px 16px;
+  background: var(--paper-card);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px rgba(10, 13, 17, .055),
+    inset 0 0 14px rgba(10, 13, 17, .05),
+    0 1px 3px rgba(10, 13, 17, .06),
+    0 0 14px 2px rgba(10, 13, 17, .035);
+}
+
+.trend-chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.trend-caption {
+  margin: 10px 0 0;
+  text-align: center;
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--ink-light);
+}
+
+/* 未来功能占位 */
+.trend-future {
+  margin-top: 26px;
+  padding: 20px 22px;
+  background: var(--paper-card);
+  border-radius: 3px;
+  box-shadow:
+    inset 0 0 0 1px rgba(10, 13, 17, .055),
+    inset 0 0 14px rgba(10, 13, 17, .05);
+}
+
+.trend-future-title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  letter-spacing: 1.5px;
+  color: var(--ink-mid);
+}
+
+.trend-future-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trend-future-list li {
+  position: relative;
+  margin: 0 0 9px;
+  padding-left: 16px;
+  font-size: 13px;
+  letter-spacing: .4px;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+
+.trend-future-list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 10px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cinnabar);
+  opacity: .55;
+}
