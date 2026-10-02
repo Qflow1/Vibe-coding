@@ -3,66 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vibe Coding 项目</title>
+  <title>Vibe Coding 项目 · 作品导航</title>
   <style>
+    :root {
+      --paper: #f2f3f4;
+      --card: #ffffff;
+      --ink: #22252a;
+      --ink-mid: #4e545c;
+      --ink-light: #878e96;
+      --cinnabar: #8e1f1a;
+      --azurite: #39536b;
+      --border: rgba(34, 37, 42, .12);
+    }
+    * { box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", sans-serif;
-      max-width: 720px;
-      margin: 60px auto;
-      padding: 0 24px;
-      color: #1f2937;
+      margin: 0;
+      font-family: "Songti SC", "SimSun", "Noto Serif SC", "Source Han Serif SC",
+                   "STKaiti", "KaiTi", "Microsoft YaHei", serif;
+      background: var(--paper);
+      color: var(--ink);
       line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
     }
-    .tag {
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 56px 24px 72px;
+    }
+    .seal {
       display: inline-block;
-      padding: 4px 12px;
-      background: #dbeafe;
-      color: #1d4ed8;
-      border-radius: 6px;
-      font-size: 13px;
+      padding: 4px 10px;
+      color: #fff;
+      background: var(--cinnabar);
+      border-radius: 3px;
+      font-size: 12px;
+      letter-spacing: 2px;
     }
-    h1 { font-size: 36px; margin: 16px 0 8px; }
-    h2 { font-size: 22px; margin-top: 32px; border-bottom: 1px solid #e5e7eb; padding-bottom: 6px; }
-    .meta { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
-    ul { padding-left: 20px; }
-    li { margin: 6px 0; }
-    .note {
-      background: #fef3c7;
-      border-left: 4px solid #f59e0b;
-      padding: 12px 16px;
-      margin: 20px 0;
-      border-radius: 4px;
+    h1 {
+      margin: 18px 0 6px;
+      font-size: 34px;
+      font-weight: 600;
+      letter-spacing: 4px;
+    }
+    .meta {
+      margin: 0 0 30px;
+      color: var(--ink-light);
       font-size: 14px;
+    }
+    .card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 1px 3px rgba(34, 37, 42, .05);
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(142, 31, 26, .35);
+      box-shadow: 0 6px 18px rgba(34, 37, 42, .09);
+    }
+    .card .title {
+      font-size: 19px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--ink);
+    }
+    .card .title .badge {
+      display: inline-block;
+      margin-left: 8px;
+      padding: 1px 8px;
+      font-size: 11px;
+      font-weight: 400;
+      letter-spacing: 1px;
+      border-radius: 3px;
+      vertical-align: 2px;
+    }
+    .badge.live { color: #fff; background: var(--cinnabar); }
+    .badge.todo { color: var(--ink-light); background: rgba(34, 37, 42, .08); }
+    .card .desc {
+      margin: 6px 0 0;
+      font-size: 14px;
+      color: var(--ink-mid);
+    }
+    .card .hint {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: var(--ink-light);
+    }
+    .foot {
+      margin-top: 34px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 12.5px;
+      color: var(--ink-light);
+      letter-spacing: .5px;
+      text-align: center;
     }
   </style>
 </head>
 <body>
-  <span class="tag">Day 2 占位页</span>
-  <h1>Vibe Coding 项目</h1>
-  <p class="meta">
-    作者：惊蛰无声 ｜ GitHub：Qflow1<br>
-    项目启动：2026-09-17 ｜ 占位页生成：2026-09-17
-  </p>
+  <div class="wrap">
+    <span class="seal">项目</span>
+    <h1>Vibe Coding 作品集</h1>
+    <p class="meta">作者：惊蛰无声 ｜ GitHub：Qflow1</p>
 
-  <p>这是一个 <strong>占位页面</strong>。真正的功能从 Day 7 开始往里填 —— 在那之前，所有页面改动都是为「让老师知道项目在动」服务的。</p>
+    <a class="card" href="Hot-search/index.html">
+      <span class="title">今日热搜 <span class="badge live">已上线</span></span>
+      <p class="desc">三分钟看尽今日人间。门户首页 + 热点速览 + 热度趋势分析。</p>
+      <p class="hint">点这里进入 →</p>
+    </a>
 
-  <div class="note">
-    占位页不是"不重要的页面"。它的作用是<strong>第一个 commit 的证据</strong>：
-    只要这个文件能出现在 GitHub 仓库里，就说明你的 Git 4 步跑通了。
+    <div class="card">
+      <span class="title">大学生日程规划网站 <span class="badge todo">建设中</span></span>
+      <p class="desc">课表、待办、时间分配。</p>
+      <p class="hint">尚未开始，敬请期待。</p>
+    </div>
+
+    <div class="card">
+      <span class="title">英语综合学习网站 <span class="badge todo">建设中</span></span>
+      <p class="desc">词汇、听力、练习。</p>
+      <p class="hint">尚未开始，敬请期待。</p>
+    </div>
+
+    <p class="foot">28 天 VibeCoding 学习打卡 · 学习过程仓库</p>
   </div>
-
-  <h2>今日所学（Day 2）</h2>
-  <ul>
-    <li>Git 4 步：写文件 → <code>git add</code> → <code>git commit</code> → <code>git push</code></li>
-    <li><code>.gitignore</code> 黑名单：名单里的文件永远不进 GitHub（今天保证 <code>.env</code> 已在名单上）</li>
-    <li>第一次 commit 的水印格式：<code>Day 2｜一句话</code></li>
-    <li>Git（电脑里的总账）和 GitHub（云端网页相册）的分工</li>
-  </ul>
-
-  <h2>后续计划</h2>
-  <ul>
-    <li>Day 7：开始 MVP（最小可用功能）开发</li>
-    <li>Day 23：接入数据库，配置文件 <code>.env</code> 才会第一次被真正创建</li>
-  </ul>
 </body>
 </html>
