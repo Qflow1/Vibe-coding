@@ -411,7 +411,19 @@ body {
    ⚠️ 光靠 z-index 还不够 —— 上面截图里墨把标题和印章压灰了。
       真正原因是【墨太浓的地方文字就糊了】，
       所以要双管齐下：① 文字抬层  ② 文字自身加一点白色托底（见下） */
-.site-header > *:not(.header-ink) {
+/* ⚠️【Day 14 修复】这里必须把印章（.header-seal）也排除掉。
+   ------------------------------------------------------------
+   原来写的是 *:not(.header-ink)，印章也算在里面了，
+   而这条规则的特异性（0,2,0）比 .header-seal 自己那条（0,1,0）更高，
+   于是印章的 position:absolute 被悄悄改成了 relative ——
+   印章从"题头右上角"掉进文字流，压在标题「热点速览」的左上角。
+
+   这条规则是 Day 11 为了让文字浮到墨团之上加的，坑也就在那时埋下了；
+   之后一直没有单独的规则去管印章，所以一直没暴露，
+   直到 Day 14 用"第一次来的人"的视角走查才发现。
+
+   修法：在 :not() 里一并排除印章，让它自己那条 absolute 生效。 */
+.site-header > *:not(.header-ink):not(.header-seal) {
   position: relative;
   z-index: 2;
 }
@@ -452,11 +464,15 @@ body {
   filter: blur(.6px);
 }
 
-/* 题头左上的朱砂印章：一个方框 + 「热搜」二字 */
+/* 题头右上角的朱砂印章：一个方框 + 「热搜」二字
+   ⚠️【Day 14】补 z-index:2 —— 之前靠 .site-header > * 那条规则顺带拿到 z-index，
+      现在那条规则把印章排除了，得自己声明，否则会被墨晕（z-index:1）盖住。
+   （这条注释原本写的是"左上"，与代码 right:32px 不符，一并订正） */
 .header-seal {
   position: absolute;
   top: 28px;
   right: 32px;
+  z-index: 2;
   margin: 0;
   padding: 7px 6px;
   width: 46px;
